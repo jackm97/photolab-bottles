@@ -1,0 +1,9 @@
+Signature_	Root	Key	Name	Type
+s72	i2	s255	S255	I2
+RegLocator	Signature_
+InstalledFeature.LightroomPlugin	2	SOFTWARE\DxO\DxO PhotoLab 9	LightroomPluginFeature	18
+Path.CommonDxOPhotoLabFolder	2	SOFTWARE\DxO\DxO PhotoLab 9	CommonPath	18
+regYp4V0XegrGQ0PNCChfi9AJSOaiA	1	SOFTWARE\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}	pv	18
+regJr_8rIxvG2h5Kk4uDFoPvBYeN7g	2	SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}	pv	18
+reg.osFSSV4pBHULv1MGDneZfAJnoQ	1	Environment	PHOTOLAB_INSTALLER_KEEP_DEPENDENCIES_AFTER_DOWNLOAD	18
+Arm64_Reg_Check.DFEFC2FE_EEE6_424C_841B_D4E66F0C84A3	2	SYSTEM\CurrentControlSet\Control\Session Manager\Environment	PROCESSOR_ARCHITECTURE	2

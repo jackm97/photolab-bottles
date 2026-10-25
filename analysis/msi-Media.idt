@@ -1,0 +1,12 @@
+DiskId	LastSequence	DiskPrompt	Cabinet	VolumeLabel	Source
+i2	i4	L64	S255	S32	S72
+Media	DiskId
+1	6		Data1.cab		
+2	73		Data2.cab		
+3	74		Data3.cab		
+4	75		Data4.cab		
+5	169		Data5.cab		
+6	1117		Data6.cab		
+7	1535		Data7.cab		
+8	1563		Data8.cab		
+9	2217		Data9.cab		

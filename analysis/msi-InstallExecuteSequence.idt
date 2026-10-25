@@ -1,0 +1,59 @@
+Action	Condition	Sequence
+s72	S255	I2
+InstallExecuteSequence	Action
+SetDEFAULT_INSTALL_LOCATION		51
+PreventDowngrading	PREVENTDOWNGRADING	27
+SetMsiExecPath		48
+SetLightroomInstallerCode		49
+ValidateInstalledLightroomPlugin		53
+UninstallLightroomPluginAsync	Installed AND (REMOVE="ALL") AND NOT (WIX_UPGRADE_DETECTED OR UPGRADINGPRODUCTCODE) AND ISLIGHTROOMPLUGININSTALLED	10000
+ValidateInstalledPhotoLab	NOT REMOVE	26
+AddFirewallExclusionRuleCommand	NOT REMOVE	6586
+AddFirewallExclusionRule	NOT REMOVE	6587
+RemoveFirewallExclusionRuleCommand	NOT REMOVE	6598
+RemoveFirewallExclusionRule	NOT REMOVE	6599
+RollbackRemoveFirewallExclusionRuleCommand		6584
+RollbackRemoveFirewallExclusionRule		6585
+SetIsWebView2RuntimeRequired	NOT (REMOVE OR ISWEBVIEW2RUNTIMEINSTALLED OR ISWEBVIEW2RUNTIMEINSTALLED2)	6588
+InstallWebView2RuntimeCommand	IsWebView2RuntimeRequired	6592
+InstallWebView2Runtime	IsWebView2RuntimeRequired	6593
+CheckWindowsAppSDKRuntime	NOT REMOVE	6589
+InstallWindowsAppSDKRuntimeCommand	IsWindowsAppSDKRuntimeRequired	6594
+InstallWindowsAppSDKRuntime	IsWindowsAppSDKRuntimeRequired	6595
+DownloadDependenciesCommand	NOT REMOVE	6590
+DownloadDependencies	NOT REMOVE	6591
+InstallDependenciesCommand	NOT REMOVE	6596
+InstallDependencies	NOT REMOVE	6597
+UninstallDependenciesCommand	REMOVE="ALL" AND NOT UPGRADINGPRODUCTCODE OR REINSTALL	3598
+UninstallDependencies	REMOVE="ALL" AND NOT UPGRADINGPRODUCTCODE OR REINSTALL	3599
+Wix4RemoveFoldersEx_X64		799
+Wix4SchedXmlFile_X64	VersionNT > 400	4211
+SetRemoveUserDataProps		1501
+RemoveUserData	(REMOVE="ALL") OR (Installed AND NOT REMOVE)	1502
+AppSearch		50
+InstallValidate		1400
+InstallFiles		4000
+FileCost		900
+CostInitialize		800
+CostFinalize		1000
+CreateShortcuts		4500
+PublishFeatures		6300
+PublishProduct		6400
+CreateFolders		3700
+DuplicateFiles		4210
+FindRelatedProducts		25
+LaunchConditions		52
+ProcessComponents		1600
+RegisterProduct		6100
+RegisterUser		6000
+RemoveExistingProducts		1401
+RemoveFiles		3500
+RemoveFolders		3600
+RemoveRegistryValues		2600
+RemoveShortcuts	REMOVE="ALL" AND NOT UPGRADINGPRODUCTCODE	3200
+UnpublishFeatures		1800
+WriteRegistryValues		5000
+InstallInitialize		1500
+InstallFinalize		6600
+ValidateProductID		700
+System64Folder.DFEFC2FE_EEE6_424C_841B_D4E66F0C84A3		1

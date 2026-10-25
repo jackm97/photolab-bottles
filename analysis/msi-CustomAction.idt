@@ -1,0 +1,62 @@
+Action	Type	Source	Target	ExtendedType
+s72	i2	S72	S255	I4
+CustomAction	Action
+SetDEFAULT_INSTALL_LOCATION	51	DEFAULT_INSTALL_LOCATION	[ProgramFiles64Folder]DxO\DxO PhotoLab 9\	
+PreventDowngrading	19		A newer version of this application is already installed.
+
+Please uninstall the existing version before proceeding with this installation, or contact support if you need further assistance.	
+SetMsiExecPath	307	MsiExecPath	[SYSTEMFOLDER]msiexec.exe	
+SetLightroomInstallerCode	307	LightroomInstallerCode	{EB7EBD0A-1DBC-444A-8FD9-9E10E158562A}	
+InstallLightroomPlugin	114	MsiExecPath	/i "[#lightroom_installer.msi]" OPTICS_PRO_PATH="[INSTALLFOLDER]DxO.PhotoLab.exe"	
+ValidateInstalledLightroomPlugin	321	DxO.PhotoLab.Installer.CustomActions.CA.dll	ValidateInstalledLightroomPlugin	
+UninstallLightroomPlugin	114	MsiExecPath	/x {EB7EBD0A-1DBC-444A-8FD9-9E10E158562A} /qr	
+UninstallLightroomPluginAsync	242	MsiExecPath	/x {EB7EBD0A-1DBC-444A-8FD9-9E10E158562A} /qr	
+ValidateInstalledLightroom	65	DxO.PhotoLab.Installer.CustomActions.CA.dll	ValidateInstalledLightroom	
+SHOWFEATURESWINDOW_ENABLE	51	SHOWFEATURESWINDOW	1	
+ValidateInstalledPhotoLab	65	DxO.PhotoLab.Installer.CustomActions.CA.dll	ValidateInstalledPhotoLab	
+AddFirewallExclusionRuleCommand	51	AddFirewallExclusionRule	"[SystemFolder]netsh.exe" advfirewall firewall add rule name="DxO PhotoLab Installer" dir=out action=allow program="%SystemRoot%\SysWOW64\rundll32.exe" protocol=tcp remoteport=443 profile=any	
+AddFirewallExclusionRule	3137	Wix4UtilCA_X64	WixQuietExec	
+RemoveFirewallExclusionRuleCommand	51	RemoveFirewallExclusionRule	"[SystemFolder]netsh.exe" advfirewall firewall delete rule name="DxO PhotoLab Installer"	
+RemoveFirewallExclusionRule	3137	Wix4UtilCA_X64	WixQuietExec	
+RollbackRemoveFirewallExclusionRuleCommand	51	RollbackRemoveFirewallExclusionRule	"[SystemFolder]netsh.exe" advfirewall firewall delete rule name="DxO PhotoLab Installer"	
+RollbackRemoveFirewallExclusionRule	3393	Wix4UtilCA_X64	WixQuietExec	
+SetIsWebView2RuntimeRequired	51	IsWebView2RuntimeRequired	1	
+InstallWebView2RuntimeCommand	51	InstallWebView2Runtime	Name=Microsoft WebView2 Runtime;FileName=WebView2_1.3.221.3.exe;DownloadUrl=https://download-center.dxo.com/PhotoLab/v9/Win/dependencies/WebView2/WebView2_1.3.221.3.exe;InstallArguments=/silent /install;OfflinePath=[INSTALLERDIRECTORY];OnlinePath=[TempFolder];DownloadText=Downloading {0}...  {1} %,  {2:N0} MB / {3:N0} MB;DownloadErrorText=An issue occurred while downloading the external package {0}. Please check the Internet connection or try again.
+
+Would you like to retry?;InstallText=Installing {0}...;InstallErrorText=An issue occurred while installing the external package {0}. The error was: {1}
+
+Please try to reinstall the application or contact support if you require additional help.;KeepDependenciesAfterDownload=[KEEP_DEPENDENCIES_AFTER_DOWNLOAD]	
+InstallWebView2Runtime	3073	DxO.PhotoLab.Installer.CustomActions.CA.dll	Install	
+CheckWindowsAppSDKRuntime	1	DxO.PhotoLab.Installer.CustomActions.CA.dll	CheckWindowsAppSDKRuntime	
+InstallWindowsAppSDKRuntimeCommand	51	InstallWindowsAppSDKRuntime	Name=Microsoft Windows App SDK Runtime;FileName=WindowsAppRuntimeInstall-x64_2.2.0.0.exe;DownloadUrl=https://download-center.dxo.com/PhotoLab/v9/Win/dependencies/WindowsAppSDK/WindowsAppRuntimeInstall-x64_2.2.0.0.exe;InstallArguments=;OfflinePath=[INSTALLERDIRECTORY];OnlinePath=[TempFolder];DownloadText=Downloading {0}...  {1} %,  {2:N0} MB / {3:N0} MB;DownloadErrorText=An issue occurred while downloading the external package {0}. Please check the Internet connection or try again.
+
+Would you like to retry?;InstallText=Installing {0}...;InstallErrorText=An issue occurred while installing the external package {0}. The error was: {1}
+
+Please try to reinstall the application or contact support if you require additional help.;KeepDependenciesAfterDownload=[KEEP_DEPENDENCIES_AFTER_DOWNLOAD]	
+InstallWindowsAppSDKRuntime	3073	DxO.PhotoLab.Installer.CustomActions.CA.dll	Install	
+DownloadDependenciesCommand	51	DownloadDependencies	Path=[Dependencies];IsWebView2RuntimeRequired=[IsWebView2RuntimeRequired];WebView2RuntimeName=Microsoft WebView2 Runtime;WebView2RuntimeFileName=WebView2_1.3.221.3.exe;WebView2RuntimeDownloadUrl=https://download-center.dxo.com/PhotoLab/v9/Win/dependencies/WebView2/WebView2_1.3.221.3.exe;IsWindowsAppSDKRuntimeRequired=[IsWindowsAppSDKRuntimeRequired];WindowsAppSDKRuntimeName=Microsoft Windows App SDK Runtime;WindowsAppSDKRuntimeFileName=WindowsAppRuntimeInstall-x64_2.2.0.0.exe;WindowsAppSDKRuntimeDownloadUrl=https://download-center.dxo.com/PhotoLab/v9/Win/dependencies/WindowsAppSDK/WindowsAppRuntimeInstall-x64_2.2.0.0.exe;OfflinePath=[INSTALLERDIRECTORY];OnlinePath=[TempFolder];DownloadText=Downloading {0}...  {1} %,  {2:N0} MB / {3:N0} MB;DownloadErrorText=An issue occurred while downloading the external package {0}. Please check the Internet connection or try again.
+
+Would you like to retry?;InstallText=Installing {0}...;InstallErrorText=An issue occurred while installing the external package {0}. The error was: {1}
+
+Please try to reinstall the application or contact support if you require additional help.;KeepDependenciesAfterDownload=[KEEP_DEPENDENCIES_AFTER_DOWNLOAD]	
+DownloadDependencies	1025	DxO.PhotoLab.Installer.CustomActions.CA.dll	DownloadDependencies	
+InstallDependenciesCommand	51	InstallDependencies	Path=[Dependencies];OfflinePath=[INSTALLERDIRECTORY];OnlinePath=[TempFolder];DownloadText=Downloading {0}...  {1} %,  {2:N0} MB / {3:N0} MB;DownloadErrorText=An issue occurred while downloading the external package {0}. Please check the Internet connection or try again.
+
+Would you like to retry?;InstallText=Installing {0}...;InstallErrorText=An issue occurred while installing the external package {0}. The error was: {1}
+
+Please try to reinstall the application or contact support if you require additional help.;KeepDependenciesAfterDownload=[KEEP_DEPENDENCIES_AFTER_DOWNLOAD]	
+InstallDependencies	3073	DxO.PhotoLab.Installer.CustomActions.CA.dll	InstallDependencies	
+UninstallDependenciesCommand	51	UninstallDependencies	Path=[Dependencies]	
+UninstallDependencies	3073	DxO.PhotoLab.Installer.CustomActions.CA.dll	UninstallDependencies	
+Wix4RemoveFoldersEx_X64	65	Wix4UtilCA_X64	WixRemoveFoldersEx	
+Wix4SchedXmlFile_X64	1	Wix4UtilCA_X64	SchedXmlFile	
+Wix4ExecXmlFile_X64	11265	Wix4UtilCA_X64	ExecXmlFile	
+Wix4ExecXmlFileRollback_X64	11521	Wix4UtilCA_X64	ExecXmlFileRollback	
+LaunchBrowser	1	Wix4UtilCA_X86	WixShellExec	
+CheckInstallationFolder	65	DxO.PhotoLab.Installer.CustomActions.CA.dll	CheckInstallationFolderCustomAction	
+SetRemoveUserDataProps	51	RemoveUserData	KEEP_PERSONAL_DATA=[KEEP_PERSONAL_DATA];Manufacturer=[Manufacturer];ProductName=[ProductName];ProductVersion=[ProductVersion];BuildNumber=[BuildNumber]	
+RemoveUserData	3137	DxO.PhotoLab.Installer.CustomActions.CA.dll	RemoveUserDataCustomAction	
+WixUIValidatePath_X64	65	WixUiCa_X64	ValidatePath	
+OpenFeedbackFAQ	65	Wix4UtilCA_X86	WixShellExec	
+WixUIPrintEula_X64	65	WixUiCa_X64	PrintEula	
+System64Folder.DFEFC2FE_EEE6_424C_841B_D4E66F0C84A3	51	System64Folder.DFEFC2FE_EEE6_424C_841B_D4E66F0C84A3	[System64Folder]	

@@ -1,0 +1,142 @@
+[
+ {
+  "id": "DeepRaw2RGBv4-Bayer",
+  "name": "DeepPRIME XD/XD2s Bayer Models",
+  "file": "DeepRaw2RGBv4-Bayer-Onnx-Bin-4.0.0+20260708085138.sha.c3e85eef.zip",
+  "url": "https://download-center.dxo.com/PhotoLab/v9/Win/dependencies/DeepRaw2RGBv4/DeepRaw2RGBv4-Bayer/DeepRaw2RGBv4-Bayer-Onnx-Bin-4.0.0+20260708085138.sha.c3e85eef.zip",
+  "version": "4.0.0+20260708085138.sha.c3e85eef"
+ },
+ {
+  "id": "DeepRaw2RGBv6-Bayer",
+  "name": "DeepPRIME 3 Bayer Models",
+  "file": "DeepRaw2RGBv6-Bayer-Onnx-Bin-6.0.0+20260708085138.sha.c3e85eef.zip",
+  "url": "https://download-center.dxo.com/PhotoLab/v9/Win/dependencies/DeepRaw2RGBv6/DeepRaw2RGBv6-Bayer/DeepRaw2RGBv6-Bayer-Onnx-Bin-6.0.0+20260708085138.sha.c3e85eef.zip",
+  "version": "6.0.0+20260708085138.sha.c3e85eef"
+ },
+ {
+  "id": "DeepRaw2RGBv6-Xtrans",
+  "name": "DeepPRIME 3 X-Trans Models",
+  "file": "DeepRaw2RGBv6-Xtrans-Onnx-Bin-6.0.0+20260708085138.sha.c3e85eef.zip",
+  "url": "https://download-center.dxo.com/PhotoLab/v9/Win/dependencies/DeepRaw2RGBv6/DeepRaw2RGBv6-Xtrans/DeepRaw2RGBv6-Xtrans-Onnx-Bin-6.0.0+20260708085138.sha.c3e85eef.zip",
+  "version": "6.0.0+20260708085138.sha.c3e85eef"
+ },
+ {
+  "id": "DeepRaw2RGBv7-Bayer",
+  "name": "DeepPRIME XD3 Bayer Models",
+  "file": "DeepRaw2RGBv7-Bayer-Onnx-Bin-7.0.0+20260708085138.sha.c3e85eef.zip",
+  "url": "https://download-center.dxo.com/PhotoLab/v9/Win/dependencies/DeepRaw2RGBv7/DeepRaw2RGBv7-Bayer/DeepRaw2RGBv7-Bayer-Onnx-Bin-7.0.0+20260708085138.sha.c3e85eef.zip",
+  "version": "7.0.0+20260708085138.sha.c3e85eef"
+ },
+ {
+  "id": "DeepRaw2RGBv7-Xtrans",
+  "name": "DeepPRIME XD3 X-Trans Models",
+  "file": "DeepRaw2RGBv7-Xtrans-Onnx-Bin-7.0.0+20260708085138.sha.c3e85eef.zip",
+  "url": "https://download-center.dxo.com/PhotoLab/v9/Win/dependencies/DeepRaw2RGBv7/DeepRaw2RGBv7-Xtrans/DeepRaw2RGBv7-Xtrans-Onnx-Bin-7.0.0+20260708085138.sha.c3e85eef.zip",
+  "version": "7.0.0+20260708085138.sha.c3e85eef"
+ },
+ {
+  "id": "DeepRaw2RGBMultiscale-Bayer-Scale1",
+  "name": "DeepPRIME Bayer Preview #1",
+  "file": "DeepRaw2RGBMultiscale-Bayer-Scale1-Onnx-Bin-1.0.0+20260708085138.sha.c3e85eef.zip",
+  "url": "https://download-center.dxo.com/PhotoLab/v9/Win/dependencies/MultiScale/DeepRaw2RGBMultiscale-Bayer-Scale1/DeepRaw2RGBMultiscale-Bayer-Scale1-Onnx-Bin-1.0.0+20260708085138.sha.c3e85eef.zip",
+  "version": "1.0.0+20260708085138.sha.c3e85eef"
+ },
+ {
+  "id": "DeepRaw2RGBMultiscale-Bayer-Scale2",
+  "name": "DeepPRIME Bayer Preview #2",
+  "file": "DeepRaw2RGBMultiscale-Bayer-Scale2-Onnx-Bin-1.0.0+20260708085138.sha.c3e85eef.zip",
+  "url": "https://download-center.dxo.com/PhotoLab/v9/Win/dependencies/MultiScale/DeepRaw2RGBMultiscale-Bayer-Scale2/DeepRaw2RGBMultiscale-Bayer-Scale2-Onnx-Bin-1.0.0+20260708085138.sha.c3e85eef.zip",
+  "version": "1.0.0+20260708085138.sha.c3e85eef"
+ },
+ {
+  "id": "DeepRaw2RGBMultiscale-Xtrans-Scale1",
+  "name": "DeepPRIME X-Trans Preview #1",
+  "file": "DeepRaw2RGBMultiscale-Xtrans-Scale1-Onnx-Bin-1.0.0+20260708085138.sha.c3e85eef.zip",
+  "url": "https://download-center.dxo.com/PhotoLab/v9/Win/dependencies/MultiScale/DeepRaw2RGBMultiscale-Xtrans-Scale1/DeepRaw2RGBMultiscale-Xtrans-Scale1-Onnx-Bin-1.0.0+20260708085138.sha.c3e85eef.zip",
+  "version": "1.0.0+20260708085138.sha.c3e85eef"
+ },
+ {
+  "id": "DeepRaw2RGBMultiscale-Xtrans-Scale2",
+  "name": "DeepPRIME X-Trans Preview #2",
+  "file": "DeepRaw2RGBMultiscale-Xtrans-Scale2-Onnx-Bin-1.0.0+20260708085138.sha.c3e85eef.zip",
+  "url": "https://download-center.dxo.com/PhotoLab/v9/Win/dependencies/MultiScale/DeepRaw2RGBMultiscale-Xtrans-Scale2/DeepRaw2RGBMultiscale-Xtrans-Scale2-Onnx-Bin-1.0.0+20260708085138.sha.c3e85eef.zip",
+  "version": "1.0.0+20260708085138.sha.c3e85eef"
+ },
+ {
+  "id": "FilmPackResources",
+  "name": "Graphic Assets",
+  "file": "FilmPackResources-2025.10.21.1.zip",
+  "url": "https://download-center.dxo.com/PhotoLab/v9/Win/dependencies/filmpack/FilmPackResources/FilmPackResources-2025.10.21.1.zip",
+  "version": "2025.10.21.1"
+ },
+ {
+  "id": "dop.gpa",
+  "name": "Grain Patterns",
+  "file": "dop.gpa-1.20260202-1.zip",
+  "url": "https://download-center.dxo.com/PhotoLab/v9/Win/dependencies/gpa/dop.gpa/dop.gpa-1.20260202-1.zip",
+  "version": "1.20260202-1"
+ },
+ {
+  "id": "SAM-TextPromptImg",
+  "name": "AI Mask Model #1",
+  "file": "SAM-TextPromptImg-Onnx-1.0.0+20260702163542.sha.47f6c63.zip",
+  "url": "https://download-center.dxo.com/PhotoLab/v9/Win/dependencies/SAM/SAM-TextPromptImg/SAM-TextPromptImg-Onnx-1.0.0+20260702163542.sha.47f6c63.zip",
+  "version": "1.0.0+20260702163542.sha.47f6c63"
+ },
+ {
+  "id": "SAM-TextPromptMain",
+  "name": "AI Mask Model #2",
+  "file": "SAM-TextPromptMain-Onnx-1.0.0+20260702163542.sha.47f6c63.zip",
+  "url": "https://download-center.dxo.com/PhotoLab/v9/Win/dependencies/SAM/SAM-TextPromptMain/SAM-TextPromptMain-Onnx-1.0.0+20260702163542.sha.47f6c63.zip",
+  "version": "1.0.0+20260702163542.sha.47f6c63"
+ },
+ {
+  "id": "SAM-Matting",
+  "name": "AI Mask Model #3",
+  "file": "SAM-Matting-Onnx-1.0.0+20260702163542.sha.47f6c63.zip",
+  "url": "https://download-center.dxo.com/PhotoLab/v9/Win/dependencies/SAM/SAM-Matting/SAM-Matting-Onnx-1.0.0+20260702163542.sha.47f6c63.zip",
+  "version": "1.0.0+20260702163542.sha.47f6c63"
+ },
+ {
+  "id": "SAM-SAMDecoder",
+  "name": "AI Mask Model #4",
+  "file": "SAM-SAMDecoder-Onnx-1.0.0+20260702163542.sha.47f6c63.zip",
+  "url": "https://download-center.dxo.com/PhotoLab/v9/Win/dependencies/SAM/SAM-SAMDecoder/SAM-SAMDecoder-Onnx-1.0.0+20260702163542.sha.47f6c63.zip",
+  "version": "1.0.0+20260702163542.sha.47f6c63"
+ },
+ {
+  "id": "SAM-SAMEncoder",
+  "name": "AI Mask Model #5",
+  "file": "SAM-SAMEncoder-Onnx-1.0.0+20260702163542.sha.47f6c63.zip",
+  "url": "https://download-center.dxo.com/PhotoLab/v9/Win/dependencies/SAM/SAM-SAMEncoder/SAM-SAMEncoder-Onnx-1.0.0+20260702163542.sha.47f6c63.zip",
+  "version": "1.0.0+20260702163542.sha.47f6c63"
+ },
+ {
+  "id": "SampleImages",
+  "name": "Sample images",
+  "file": "SampleImages_2026.08.07.0.zip",
+  "url": "https://download-center.dxo.com/PhotoLab/v9/Win/dependencies/SampleImages/SampleImages_2026.08.07.0.zip",
+  "version": "2026.08.07.0"
+ },
+ {
+  "id": "DxOInferenceEP-CUDA",
+  "name": "CUDA Execution Provider",
+  "file": "DxOInferenceEP-CUDA-800ac32.zip",
+  "url": "https://download-center.dxo.com/PhotoLab/v9/Win/dependencies/DxOInference.EP.CUDA/DxOInferenceEP-CUDA/DxOInferenceEP-CUDA-800ac32.zip",
+  "version": "800ac32"
+ },
+ {
+  "id": "DxOInferenceEP-OpenVINO",
+  "name": "OpenVINO Execution Provider",
+  "file": "DxOInferenceEP-OpenVINO-1.5.2.zip",
+  "url": "https://download-center.dxo.com/PhotoLab/v9/Win/dependencies/DxOInference.EP.OpenVINO/DxOInferenceEP-OpenVINO/DxOInferenceEP-OpenVINO-1.5.2.zip",
+  "version": "1.5.2"
+ },
+ {
+  "id": "DxOInferenceEP-TensorRT-RTX",
+  "name": "TensorRT-RTX Execution Provider",
+  "file": "DxOInferenceEP-TensorRT-RTX-0.4.0-cu13-1.zip",
+  "url": "https://download-center.dxo.com/PhotoLab/v9/Win/dependencies/DxOInference.EP.TensorRT/DxOInferenceEP-TensorRT-RTX/DxOInferenceEP-TensorRT-RTX-0.4.0-cu13-1.zip",
+  "version": "0.4.0-cu13-1"
+ }
+]

@@ -1,0 +1,91 @@
+[workspace]
+name = "photolab-bottles"
+channels = ["conda-forge"]
+platforms = ["linux-64"]
+
+# Host assumptions (Bluefin Dakota): flatpak + Bottles installed; NVIDIA driver + Vulkan ICD present;
+# unprivileged user namespaces enabled (Flatpak needs them, so bubblewrap works).
+
+[dependencies]
+# analysis + tooling
+python = "3.13.*"
+msitools = "*"          # msiinfo/msiextract/msibuild (note: can't rewrite this MSI — use tools/msipatch.py)
+7zip = "*"              # 7zz: unpack Setup.exe (7-Zip SFX) and CABs
+cabextract = "*"
+binutils = "*"          # objdump/strings for PE disassembly
+zig = "*"               # `zig cc -target x86_64-windows-gnu`: cross-compiles the stub DLL and probes, bundled mingw headers
+gh = "*"
+git = "*"
+# Wine build toolchain (pure conda-forge; see pixi tasks)
+gcc = "*"
+gxx = "*"
+clang = "*"             # PE side: CROSSCC="clang --target=x86_64-windows" (Wine supports clang+lld as cross compiler)
+lld = "*"
+flex = "*"
+bison = "*"
+make = "*"
+pkg-config = "*"
+gettext = "*"
+ccache = "*"
+bubblewrap = "*"        # fallback build route: Kron4ek-style Ubuntu bootstrap in bwrap, same as CI
+# Wine unix-side dev libs (dlopened at runtime from the host; headers needed at build)
+freetype = "*"
+gnutls = "*"
+krb5 = "*"
+xorg-libx11 = "*"
+xorg-libxext = "*"
+xorg-libxrandr = "*"
+xorg-libxi = "*"
+xorg-libxcursor = "*"
+xorg-libxfixes = "*"
+libgl-devel = "*"
+libglvnd = "*"
+vulkan-headers = "*"
+vulkan-tools = "*"      # vulkaninfo --summary
+alsa-lib = "*"
+pulseaudio-client = "*"
+dbus = "*"
+libudev = "*"
+sdl2 = "*"
+gstreamer = "*"
+gst-plugins-base = "*"
+libunwind = "*"
+
+[pypi-dependencies]
+pefile = "*"
+olefile = "*"
+
+[tasks]
+# --- analysis ---
+unpack-setup = { cmd = "7zz x -y -o$WORK/extracted $WORK/DxO_PhotoLab9_Setup.exe", env = { WORK = "$HOME/photolab-work/dxo" } }
+msi-tables = "for t in InstallExecuteSequence CustomAction Property AppSearch RegLocator; do msiinfo export $HOME/photolab-work/dxo/extracted/DxO.PhotoLab.Installer.WiX.msi $t > analysis/msi-$t.idt; done"
+msi-patch = "python -I tools/msipatch.py $HOME/photolab-work/dxo/extracted/DxO.PhotoLab.Installer.WiX.msi $HOME/photolab-work/dxo/extracted/DxO.PhotoLab.Installer.WiX.patched.msi"
+
+# --- Windows helper binaries (clean-room; no mingw-w64 package needed) ---
+build-stub = "zig cc -target x86_64-windows-gnu -shared -O2 -o out/Microsoft.WindowsAppRuntime.Bootstrap.dll bootstrap-stub/mddbootstrap_stub.c bootstrap-stub/mddbootstrap_stub.def"
+build-probes = """
+zig cc -target x86_64-windows-gnu -O2 -o out/dxcore-probe.exe tools/dxcore-probe.c -lole32 -ldxcore &&
+zig cc -target x86_64-windows-gnu -O2 -o out/winver-probe64.exe tools/winver-probe.c -lntdll &&
+zig cc -target x86-windows-gnu   -O2 -o out/winver-probe32.exe tools/winver-probe.c -lntdll
+"""
+
+# --- Wine source + patches ---
+wine-fetch = "git clone --depth=1 -b ${WINE_TAG:-wine-11.20} https://github.com/wine-mirror/wine.git build/wine && git clone --depth=1 -b v${WINE_TAG#wine-} https://github.com/wine-staging/wine-staging.git build/wine-staging"
+wine-patch = "cd build/wine && python3 ../wine-staging/staging/patchinstall.py --all --backend=git-apply && for p in $(cat ../../wine-patches/series.staging); do git apply --3way ../../wine-patches/$p || exit 1; done"
+
+# Route A: pure-pixi build (experimental; WoW64, clang/lld for the PE side)
+wine-configure = "mkdir -p build/out && cd build/out && CROSSCC='clang --target=x86_64-windows' CROSSLD=lld ../wine/configure --enable-archs=i386,x86_64 --disable-tests --prefix=$PWD/../runner/photolab-wine-dev"
+wine-build = "cd build/out && make -j$(nproc) && make install"
+
+# Route B: Kron4ek-style bwrap build (same as CI; needs bootstrap tarball published by our Actions)
+wine-build-bwrap = "bash build/build_wine.sh"   # forked Kron4ek script; set WINE_BRANCH=staging, CUSTOM_PATCHES_DIR=wine-patches
+
+# --- Bottles (host Flatpak) ---
+runner-install = "rm -rf ~/.var/app/com.usebottles.bottles/data/bottles/runners/photolab-wine-dev && cp -r build/runner/photolab-wine-dev ~/.var/app/com.usebottles.bottles/data/bottles/runners/"
+bottles-cli = "flatpak run --command=bottles-cli com.usebottles.bottles"
+bottle-shell = "flatpak run --command=sh com.usebottles.bottles"
+ver-check = "flatpak run --command=bottles-cli com.usebottles.bottles shell -b 'DxO PhotoLab 9' -i 'cmd /c ver' && flatpak run --command=bottles-cli com.usebottles.bottles shell -b 'DxO PhotoLab 9' -i 'C:\\\\windows\\\\syswow64\\\\cmd.exe /c ver'"
+
+# --- CI via gh ---
+ci-build-runner = "gh workflow run build-runner.yml -f wine_tag=${WINE_TAG:-wine-11.20} -f series=staging && gh run watch"
+ci-fetch-runner = "gh release download --pattern 'photolab-wine-*.tar.xz' -D build/runner/"

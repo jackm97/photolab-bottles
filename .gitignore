@@ -1,0 +1,7 @@
+.pixi/
+pixi.lock
+out/
+build/
+*.msi
+*.exe
+*.cab
