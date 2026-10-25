@@ -1,0 +1,4 @@
+[submodule "wine"]
+	path = wine
+	url = https://github.com/jackm97/wine-cachyos.git
+	branch = photolab
