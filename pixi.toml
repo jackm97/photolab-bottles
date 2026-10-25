@@ -89,3 +89,13 @@ ver-check = "flatpak run --command=bottles-cli com.usebottles.bottles shell -b '
 # --- CI via gh ---
 ci-build-runner = "gh workflow run build-runner.yml -f wine_tag=${WINE_TAG:-wine-11.20} -f series=staging && gh run watch"
 ci-fetch-runner = "gh release download --pattern 'photolab-wine-*.tar.xz' -D build/runner/"
+
+[feature.git.dependencies]
+git = "*"
+nushell = "*"
+
+[feature.git.tasks]
+setup-git = "git config core.hooksPath .project/hooks"
+
+[environments]
+git = { features = ["git"], no-default-feature = true }
