@@ -2,11 +2,25 @@
 name = "photolab-bottles"
 authors = ["Jack Myers <jack@myersjack.dev>"]
 channels = ["conda-forge"]
-platforms = ["linux-64"]
+# pixi solves with conservative default virtual packages (glibc 2.28); the 2.34
+# sysroot's run-export is `__glibc >=2.34`, so declare that baseline.
+platforms = [{ platform = "linux-64", name = "linux-64-glibc234", glibc = "2.34" }]
 preview = ["pixi-build"]
 requires-pixi = ">=0.83.0"
 
+# Compiler stems resolve to <stem>_<platform> activation packages (gcc_linux-64,
+# gxx_linux-64); their activation exports CC/CXX/CFLAGS/LDFLAGS. The C stdlib is
+# the conda sysroot at glibc 2.34, the oldest conda-forge sysroot that declares
+# gettid and the baseline that keeps the build relocatable to newer systems.
+[workspace.build-variants]
+c_compiler           = ["gcc"]
+cxx_compiler         = ["gxx"]
+c_stdlib             = ["sysroot"]
+c_stdlib_version     = ["2.34"]
+
+# ---- default environment: our Wine build and the analysis tools ---------------
 [dependencies]
+photolab-wine = { path = "wine" }
 python = "3.13.*"
 msitools = "*"
 7zip = "*"
@@ -19,59 +33,14 @@ nushell = "*"
 pefile = "*"
 olefile = "*"
 
-# Wine build dependencies.
+# ---- dev environment: for debugging only (build closure of photolab-wine, not built) ----
+[feature.dev.dev]
+photolab-wine = { path = "wine" }
+
+# Debugging tools only.
 [feature.dev.dependencies]
-# toolchain
-gcc = "*"
-gxx = "*"
-make = "*"
-bison = "*"
-flex = "*"
-pkg-config = "*"
-perl = "*"
-gettext = "*"
-autoconf = "*"
-automake = "*"
-python = "3.13.*"
-clang = "*"
-lld = "*"
-llvm-tools = "*"
 ccache = "*"
-# host libraries
-freetype = "*"
-fontconfig = "*"
-gnutls = "*"
-krb5 = "*"
-xorg-libx11 = "*"
-xorg-libxext = "*"
-xorg-libxrender = "*"
-xorg-libxrandr = "*"
-xorg-libxi = "*"
-xorg-libxcursor = "*"
-xorg-libxfixes = "*"
-xorg-libxcomposite = "*"
-xorg-libxinerama = "*"
-xorg-libxxf86vm = "*"
-libxkbcommon = "*"
-wayland = "*"
-wayland-protocols = "*"
-libgl-devel = "*"
-libegl-devel = "*"
-vulkan-headers = "*"
-libvulkan-loader = "*"
-alsa-lib = "*"
-pulseaudio-client = "*"
-pipewire = "*"
-dbus = "*"
-libudev = "*"
-sdl2 = "*"
-gstreamer = "*"
-gst-plugins-base = "*"
-ffmpeg = "*"
-libpcap = "*"
-libunwind = "*"
-libusb = "*"
-zlib = "*"
+nushell = "*"
 
 [feature.git.dependencies]
 git = "*"
