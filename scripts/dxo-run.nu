@@ -10,8 +10,11 @@ def main [prefix: string] {
     mkdir $logs
     let exe = 'C:\Program Files\DxO\DxO PhotoLab 9\DxO.PhotoLab.exe'
 
+    # WINEDEBUG defaults to loader tracing; set DXO_WINEDEBUG to override it.
+    let winedebug = ($env.DXO_WINEDEBUG? | default '+loaddll')
+
     # The app's exit status is not an error for this script; the logs are the result.
-    with-env {WINEDEBUG: '+loaddll'} {
+    with-env {WINEDEBUG: $winedebug} {
         try { ^wine $exe o+e> ($logs | path join dxo-run.log) } catch {|e| print $'wine exited nonzero: ($e.msg)' }
     }
     # The app can leave processes behind after its window closes; wait for them.
