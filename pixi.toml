@@ -48,6 +48,22 @@ photolab-wine = { path = "wine" }
 ccache = "*"
 nushell = "*"
 
+# ---- re environment: reverse engineering of DxO's installer (read-only analysis) ----
+[feature.re.dependencies]
+dotnet-sdk = "10.*"
+nushell = "*"
+7zip = "*"
+cabextract = "*"
+python = "3.13.*"
+
+[feature.re.pypi-dependencies]
+olefile = "*"
+
+[feature.re.tasks]
+# dotnet refuses to reinstall a tool, so skip when ilspycmd is already there.
+re-tools = { cmd = '''nu -c 'if not ("build/tools/ilspy/ilspycmd" | path exists) { ^dotnet tool install ilspycmd --tool-path build/tools/ilspy }' ''', env = { DOTNET_CLI_TELEMETRY_OPTOUT = "1" } }
+re-extract = "nu scripts/re/extract.nu"
+
 [feature.git.dependencies]
 git = "*"
 nushell = "*"
@@ -58,3 +74,4 @@ setup-git = "git config core.hooksPath .project/hooks"
 [environments]
 git = { features = ["git"], no-default-feature = true }
 dev = { features = ["dev"], no-default-feature = true }
+re = { features = ["re"], no-default-feature = true }
