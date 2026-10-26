@@ -52,6 +52,7 @@ nushell = "*"
 
 # ---- re environment: reverse engineering of DxO's installer (read-only analysis) ----
 [feature.re.dependencies]
+openjdk = "25.*"
 dotnet-sdk = "10.*"
 nushell = "*"
 7zip = "*"
@@ -65,6 +66,8 @@ olefile = "*"
 # dotnet refuses to reinstall a tool, so skip when ilspycmd is already there.
 re-tools = { cmd = '''nu -c 'if not ("build/tools/ilspy/ilspycmd" | path exists) { ^dotnet tool install ilspycmd --tool-path build/tools/ilspy }' ''', env = { DOTNET_CLI_TELEMETRY_OPTOUT = "1" } }
 re-extract = "nu scripts/re/extract.nu"
+# Pinned Ghidra release (not on conda-forge); skips when already unpacked, verifies SHA-256 otherwise.
+re-ghidra = "nu scripts/re/ghidra.nu"
 
 [feature.git.dependencies]
 git = "*"
