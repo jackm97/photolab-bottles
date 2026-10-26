@@ -33,6 +33,12 @@ nushell = "*"
 pefile = "*"
 olefile = "*"
 
+[tasks]
+prefix-deps = { cmd = "nu scripts/prefix-deps.nu {{ prefix }}", args = [{ arg = "prefix", default = ".prefixes/dxo" }] }
+prefix-dxvk = { cmd = "nu scripts/prefix-dxvk.nu {{ prefix }}", args = [{ arg = "prefix", default = ".prefixes/dxo" }] }
+prefix-winver = { cmd = "nu scripts/prefix-winver.nu {{ prefix }}", args = [{ arg = "prefix", default = ".prefixes/dxo" }] }
+dxo-setup = { cmd = "nu scripts/dxo-setup.nu {{ prefix }}", args = [{ arg = "prefix", default = ".prefixes/dxo" }] }
+
 # ---- dev environment: for debugging only (build closure of photolab-wine, not built) ----
 [feature.dev.dev]
 photolab-wine = { path = "wine" }
