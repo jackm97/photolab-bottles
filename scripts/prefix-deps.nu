@@ -15,6 +15,9 @@ def main [prefix: string] {
     # Capture winetricks output so an unknown verb can be reported clearly; the
     # output is still printed.
     let result = (^winetricks -q ...$verbs o+e>| tee { print } | collect)
+    # WineHQ bug 41727: without OnlyUseLatestCLR, .NET 4's shim in the unmanaged rundll32 that runs wine.inf looks for CLR 2 and pops up "This application could not be started" on every prefix update.
+    ^wine reg add 'HKLM\Software\Microsoft\.NETFramework' /v OnlyUseLatestCLR /t REG_DWORD /d 1 /f /reg:64
+    ^wine reg add 'HKLM\Software\Microsoft\.NETFramework' /v OnlyUseLatestCLR /t REG_DWORD /d 1 /f /reg:32
     ^wineserver -w
     if ($result =~ '(?i)unknown arg|unknown verb|not a valid verb|unknown option') {
         error make {msg: $'winetricks rejected a verb as unknown:(char nl)($result | lines | where {|l| $l =~ "(?i)unknown|not a valid" } | str join (char nl))'}
