@@ -20,17 +20,9 @@ def main [prefix: string] {
     # Let msiexec finish.
     ^wineserver -w
 
-    let temp = ($prefix | path join drive_c users $env.USER AppData Local Temp)
-    let wanted = [photolab_install_log.log photolab_installer_bootstrap_log.log]
-    mut found = []
-    for n in $wanted {
-        let src = ($temp | path join $n)
-        if ($src | path exists) {
-            cp $src $logs
-            $found = ($found | append $n)
-        }
-    }
+    # The prefix user is not $env.USER (Proton-lineage Wine uses steamuser), so glob over users.
+    let found = (glob ($prefix | path join drive_c users '*' AppData Local Temp 'photolab*_log.log'))
+    for src in $found { cp $src $logs }
     print $'dxo-setup.log: ((($logs | path join dxo-setup.log) | path exists))'
     print $'installer logs found: ($found | str join ", ")'
-    print $'installer logs missing: ($wanted | where {|n| not ($n in $found) } | str join ", ")'
 }
