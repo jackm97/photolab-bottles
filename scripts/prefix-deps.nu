@@ -11,7 +11,7 @@ def main [prefix: string] {
         ^wineserver -w
     }
 
-    let verbs = [dotnet48 vcrun2022 d3dcompiler_47 corefonts webview2]
+    let verbs = [dotnet48 vcrun2022 d3dcompiler_47 corefonts]
     # Capture winetricks output so an unknown verb can be reported clearly; the
     # output is still printed.
     let result = (^winetricks -q ...$verbs o+e>| tee { print } | collect)
