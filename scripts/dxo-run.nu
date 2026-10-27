@@ -1,8 +1,15 @@
 # Launch DxO PhotoLab 9 in the prefix with loader tracing, then collect the app's own logs.
-# Usage: nu scripts/dxo-run.nu <prefix>
+# Usage: nu scripts/dxo-run.nu <prefix> [--driver wayland|x11]
+# --driver wayland (default): DISPLAY is hidden from wine so winex11 cannot initialise and Wine
+#   falls back to winewayland (WAYLAND_DISPLAY is passed through). --driver x11 keeps the
+#   environment as is. The driver choice is never written to the prefix registry.
 # Uses wine and wineserver from PATH. The wine trace goes to build/logs/dxo-run.log;
 # the app's logs are copied to build/logs/dxo-app/ (relative to <prefix>/drive_c/users/).
-def main [prefix: string] {
+def main [prefix: string, --driver: string = 'wayland'] {
+    if $driver not-in ['wayland' 'x11'] { error make {msg: $'--driver must be wayland or x11, got ($driver)'} }
+    if $driver == 'wayland' and ($env.WAYLAND_DISPLAY? | default '' | is-empty) {
+        error make {msg: 'WAYLAND_DISPLAY is not set; use --driver x11 outside a Wayland session'}
+    }
     let prefix = ($prefix | path expand)
     $env.WINEPREFIX = $prefix
     let logs = ($env.PWD | path join build logs)
@@ -15,6 +22,7 @@ def main [prefix: string] {
 
     # The app's exit status is not an error for this script; the logs are the result.
     with-env {WINEDEBUG: $winedebug} {
+        if $driver == 'wayland' { hide-env --ignore-errors DISPLAY }
         try { ^wine $exe o+e> ($logs | path join dxo-run.log) } catch {|e| print $'wine exited nonzero: ($e.msg)' }
     }
     # The app can leave processes behind after its window closes; wait for them.
