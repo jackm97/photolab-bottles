@@ -16,6 +16,15 @@
 #
 # Runner: photolab-wine-2941df8 is built for x86-64-v3 and ships Windows.winmd,
 # so a new bottle's wineboot no longer spins looking for it.
+#
+# Base: this starts from Bottles' Application environment (dxvk and vkd3d on,
+# pulseaudio_latency off, arial32/times32/courie32 fonts); every other
+# Parameters key is left out so Bottles' defaults apply.
+# Added: wayland and the vulkan renderer; dotnet48, vcredist2022,
+# d3dcompiler_47 and netfx48-winrt, which DxO's installer and app need.
+# Dropped from the Application environment: mono (dotnet48 uninstalls Wine Mono
+# anyway) and gecko (unused; DxO's Hub is WebView2). Not included: allfonts,
+# because its webdin32 step fails in stock Bottles too.
 
 Name: DxO PhotoLab 9
 Arch: win64
@@ -26,9 +35,6 @@ Windows: win10
 Runner: photolab-wine-2941df8
 DXVK: dxvk-3.1.1
 VKD3D: vkd3d-proton-3.0.1
-NVAPI: ""
-D7VK: ""
-LatencyFleX: ""
 
 Versioning: false
 Language: sys
@@ -36,23 +42,9 @@ Language: sys
 Parameters:
   dxvk: true
   vkd3d: true
+  pulseaudio_latency: false
   wayland: true
   renderer: vulkan
-  dxvk_nvapi: false
-  d7vk: false
-  latencyflex: false
-  sync: wine
-  discrete_gpu: false
-  use_runtime: false
-  use_steam_runtime: false
-  winebridge: false
-  sandbox: false
-  fixme_logs: false
-  mouse_warp: true
-  decorated: true
-  take_focus: false
-  virtual_desktop: false
-  custom_dpi: 96
 
 Environment_Variables:
   # Hide Mesa's lavapipe ICD from the Vulkan loader so vkd3d-proton / ONNX
@@ -63,10 +55,12 @@ Environment_Variables:
 
 # Replayed in this order on import.
 Installed_Dependencies:
+  - arial32
+  - times32
+  - courie32
   - dotnet48
   - vcredist2022
   - d3dcompiler_47
-  - allfonts
   - netfx48-winrt
 
 DLL_Overrides: {}
