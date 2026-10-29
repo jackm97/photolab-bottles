@@ -3,8 +3,10 @@ name = "photolab-bottles"
 authors = ["Jack Myers <jack@myersjack.dev>"]
 channels = ["conda-forge"]
 # pixi solves with conservative default virtual packages (glibc 2.28); the 2.34
-# sysroot's run-export is `__glibc >=2.34`, so declare that baseline.
-platforms = [{ platform = "linux-64", name = "linux-64-glibc234", glibc = "2.34" }]
+# sysroot's run-export is `__glibc >=2.34`, so declare that baseline. archspec
+# x86_64_v3 declares the x86-64-v3 microarchitecture (the photolab-wine build
+# requires x86_64-microarch-level 3, which depends on `__archspec`).
+platforms = [{ platform = "linux-64", name = "linux-64-glibc234", glibc = "2.34", archspec = "x86_64_v3" }]
 preview = ["pixi-build"]
 requires-pixi = ">=0.83.0"
 

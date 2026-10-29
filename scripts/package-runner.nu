@@ -1,5 +1,6 @@
-# Repacks the conda photolab-wine package into a Bottles runner tarball and
-# writes everything the release needs into `out/`:
+# Repacks the conda photolab-wine package, plus Windows.winmd from the separate
+# windows-winmd package (wine.inf copies it into every new prefix), into a
+# Bottles runner tarball and writes everything the release needs into `out/`:
 #   photolab-wine-<sha7>-x86_64.tar.xz   runner tarball (bin/, lib/, share/)
 #   <original conda .tar.bz2>            copied from dist/
 #   photolab-wine-<sha7>-source.tar.xz   LGPL source of the exact wine commit
@@ -31,6 +32,14 @@ def main [
     }
     let pkg = ($pkgs | first)
 
+    let winmd_pkgs = (glob $"($dist_abs)/**/windows-winmd-*.tar.bz2")
+    if ($winmd_pkgs | length) != 1 {
+        error make { msg: $"expected exactly one windows-winmd-*.tar.bz2 under ($dist_abs), found ($winmd_pkgs | length): ($winmd_pkgs)" }
+    }
+    let winmd_pkg = ($winmd_pkgs | first)
+    # windows-rs 0.62.0 Windows.winmd, as pinned in wine/packages/windows-winmd/recipe.yaml.
+    let winmd_sha256 = 'aea3e9828927aedd1ace2b927911e826f386d5c52dc6bd4151c10d314cb1adbf'
+
     # Staging lives outside the repository and is removed also on failure.
     let stage = (^mktemp --directory --tmpdir photolab-runner.XXXXXX | str trim)
     try {
@@ -50,8 +59,26 @@ def main [
             mv $"($extracted)/($d)" $"($stage)/($top)/($d)"
         }
 
+        # Windows.winmd from the windows-winmd package, verified against the pinned hash.
+        let winmd_dir = $"($stage)/winmd-pkg"
+        mkdir $winmd_dir
+        ^tar -xjf $winmd_pkg -C $winmd_dir
+        let winmd_src = $"($winmd_dir)/share/wine/winmd/Windows.winmd"
+        if not ($winmd_src | path exists) {
+            error make { msg: $"the windows-winmd package has no share/wine/winmd/Windows.winmd" }
+        }
+        let winmd_actual = (open --raw $winmd_src | hash sha256)
+        if $winmd_actual != $winmd_sha256 {
+            error make { msg: $"Windows.winmd sha256 is ($winmd_actual), expected ($winmd_sha256)" }
+        }
+        mkdir $"($stage)/($top)/share/wine/winmd"
+        cp $winmd_src $"($stage)/($top)/share/wine/winmd/Windows.winmd"
+
+        # Multithreaded xz.
         let tarball = $"($out_abs)/($top).tar.xz"
-        ^tar -cJf $tarball -C $stage $top
+        with-env { XZ_OPT: '-T0' } {
+            ^tar -cJf $tarball -C $stage $top
+        }
 
         let md5 = (^md5sum $tarball | split row ' ' | first)
         let size = (ls -D $tarball | get 0.size | into int)

@@ -67,6 +67,11 @@ jobs:
         working-directory: wine
         run: pixi publish --target-dir ../dist --package-format tar-bz2
 
+      # The runner tarball also carries Windows.winmd, which comes from this separate package.
+      - name: Build the windows-winmd conda package
+        working-directory: wine/packages/windows-winmd
+        run: pixi publish --target-dir "$GITHUB_WORKSPACE/dist" --package-format tar-bz2
+
       - name: Repack, checksum and archive the source
         env:
           SHA: ${{ steps.ver.outputs.sha }}
