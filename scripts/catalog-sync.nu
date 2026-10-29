@@ -8,10 +8,38 @@ const installer_url = 'https://download.visualstudio.microsoft.com/download/pr/7
 const installer_sha256 = '95889d6de3f2070c07790ad6cf2000d33d9a1bdfc6a381725ab82ab1c314fd53'
 const winrt_cab = 'x64-Windows10.0-KB4486153-x64.cab'
 
-# Reads index.yml under root and checks each entry has a manifest.
-def check-index [root: string, label: string] {
-    let idx = (open --raw $"($root)/index.yml" | from yaml)
-    $idx | transpose name entry | each {|r|
+# Every *.yml file directly at the subtree root is an index file: index.yml
+# plus the versioned ones (67.5.yml, ...) that Bottles requests first.
+def root-indexes [root: string] {
+    glob $"($root)/*.yml" | where {|p| not ($p | path basename | str starts-with '.') } | sort
+}
+
+# Adds the entries (a record of name -> index entry) to every root index file.
+def merge-entries [root: string, entries: record] {
+    for f in (root-indexes $root) {
+        mut idx = (open --raw $f | from yaml)
+        for name in ($entries | columns) {
+            $idx = ($idx | upsert $name ($entries | get $name))
+        }
+        $idx | to yaml | save --force $f
+    }
+}
+
+# Full checking applies to index.yml and to versioned files N.M with N.M >= 67.4
+# (numeric, per component). Older, 2022.* and testing files get the light check.
+def is-full-check [file: string] {
+    let n = ($file | path basename | str replace -r '\.yml$' '')
+    if $n == 'index' { return true }
+    if not ($n =~ '^[0-9]+\.[0-9]+$') { return false }
+    let v = ($n | split row '.' | each {|x| $x | into int })
+    ($v.0 > 67) or ($v.0 == 67 and $v.1 >= 4)
+}
+
+# Reads one index file and checks each entry (or only the names in `only`, when
+# non-empty) has a manifest under root.
+def check-index [root: string, file: string, label: string, only: list<string>] {
+    let idx = (open --raw $file | from yaml)
+    $idx | transpose name entry | where {|r| ($only | is-empty) or ($r.name in $only) } | each {|r|
         let sub = ($r.entry | get -o 'Sub-category')
         let p = if $sub == null {
             $"($root)/($r.entry.Category)/($r.name).yml"
@@ -19,7 +47,7 @@ def check-index [root: string, label: string] {
             $"($root)/($r.entry.Category)/($sub)/($r.name).yml"
         }
         if not ($p | path exists) {
-            error make { msg: $"($label): index entry ($r.name) has no manifest at ($p)" }
+            error make { msg: $"($label): ($file | path basename) entry ($r.name) has no manifest at ($p)" }
         }
     } | ignore
     $idx
@@ -78,7 +106,7 @@ def sync-catalog [tmp: string] {
         error make { msg: $"no release with tag ($runner_tag)" }
     }
     mkdir $"($comp)/runners/wine"
-    mut comp_index = (open --raw $"($comp)/index.yml" | from yaml)
+    mut runner_entries = {}
     for tag in $tags {
         let dl = $"($tmp)/ri/($tag)"
         mkdir $dl
@@ -102,7 +130,7 @@ def sync-catalog [tmp: string] {
                 platform: linux
             }]
         } | to yaml | save --force $"($comp)/runners/wine/($tag).yml"
-        $comp_index = ($comp_index | upsert $tag {
+        $runner_entries = ($runner_entries | upsert $tag {
             Category: runners
             'Sub-category': wine
             Channel: stable
@@ -111,7 +139,7 @@ def sync-catalog [tmp: string] {
             Architectures: [x86_64]
         })
     }
-    $comp_index | to yaml | save --force $"($comp)/index.yml"
+    merge-entries $comp $runner_entries
 
     # 3. Our dependency, with the installer-derived values filled in.
     let exe = $"($tmp)/ndp48.exe"
@@ -139,21 +167,44 @@ def sync-catalog [tmp: string] {
         | str replace --all '__WINRT_DIR__' $winrt_dir
         | str replace --all '__XAML_DIR__' $xaml_dir
         | save --force $"($deps)/Essentials/netfx48-winrt.yml"
-    open --raw $"($deps)/index.yml" | from yaml
-        | upsert netfx48-winrt {
+    merge-entries $deps {
+        netfx48-winrt: {
             Description: '.NET Framework 4.8 Windows Runtime interop assemblies (System.Runtime.WindowsRuntime, .UI.Xaml)'
             Category: Essentials
         }
-        | to yaml | save --force $"($deps)/index.yml"
+    }
 
     # 4. Validate.
-    let ci = (check-index $comp 'components')
-    let di = (check-index $deps 'dependencies')
-    for k in [dxvk-3.1.1 vkd3d-proton-3.0.1] {
-        if $k not-in ($ci | columns) { error make { msg: $"components index lacks ($k)" } }
+    let comp_files = (root-indexes $comp)
+    let dep_files = (root-indexes $deps)
+    print $"components root index files: ($comp_files | length)"
+    print $"dependencies root index files: ($dep_files | length)"
+    let our_runners = ($tags)
+    for f in $comp_files {
+        let b = ($f | path basename)
+        if (is-full-check $f) {
+            print $"components ($b): full check"
+            let idx = (check-index $comp $f 'components' [])
+            for k in [dxvk-3.1.1 vkd3d-proton-3.0.1] {
+                if $k not-in ($idx | columns) { error make { msg: $"components ($b) lacks ($k)" } }
+            }
+        } else {
+            print $"components ($b): own entries only"
+            check-index $comp $f 'components' $our_runners | ignore
+        }
     }
-    for k in [dotnet48 vcredist2022 d3dcompiler_47 allfonts] {
-        if $k not-in ($di | columns) { error make { msg: $"dependencies index lacks ($k)" } }
+    for f in $dep_files {
+        let b = ($f | path basename)
+        if (is-full-check $f) {
+            print $"dependencies ($b): full check"
+            let idx = (check-index $deps $f 'dependencies' [])
+            for k in [dotnet48 vcredist2022 d3dcompiler_47 allfonts] {
+                if $k not-in ($idx | columns) { error make { msg: $"dependencies ($b) lacks ($k)" } }
+            }
+        } else {
+            print $"dependencies ($b): own entries only"
+            check-index $deps $f 'dependencies' [netfx48-winrt] | ignore
+        }
     }
 
     # 5. Provenance.

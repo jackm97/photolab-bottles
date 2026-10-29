@@ -8,12 +8,17 @@
 # (they provide the runner and the netfx48-winrt dependency). After importing,
 # run DxO's own Setup.exe in the bottle and activate DxO. A newer photolab-wine
 # runner can be selected in the bottle's settings.
+#
+# Windows version: Bottles' win11 preset writes build 22000, which DxO's
+# installer rejects, so the bottle uses win10 and the "Windows 11 build 26100"
+# Registry Rule sets the build values (the same ones scripts/prefix-winver.nu
+# sets) on every trigger and removes Wine's own version override.
 
 Name: DxO PhotoLab 9
 Arch: win64
 Environment: Custom
 
-Windows: win11
+Windows: win10
 
 Runner: photolab-wine-d67f859
 DXVK: dxvk-3.1.1
@@ -64,11 +69,51 @@ Installed_Dependencies:
 DLL_Overrides: {}
 
 Registry_Rules:
+  - name: Windows 11 build 26100
+    description: >
+      RtlGetVersion-visible build 26100 for 64-bit and 32-bit (Wow6432Node)
+      processes, and removal of Wine's per-user version override.
+    triggers: [all]
+    run_once: false
+    keys: |
+      REGEDIT4
+
+      [HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion]
+      "CurrentMajorVersionNumber"=dword:0000000a
+      "CurrentMinorVersionNumber"=dword:00000000
+      "CurrentBuildNumber"="26100"
+      "CurrentBuild"="26100"
+      "CurrentVersion"="6.3"
+
+      [HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\Windows NT\CurrentVersion]
+      "CurrentMajorVersionNumber"=dword:0000000a
+      "CurrentMinorVersionNumber"=dword:00000000
+      "CurrentBuildNumber"="26100"
+      "CurrentBuild"="26100"
+      "CurrentVersion"="6.3"
+
+      [HKEY_CURRENT_USER\Software\Wine]
+      "Version"=-
+
+  - name: .NET OnlyUseLatestCLR
+    description: >
+      Backs up the netfx48-winrt dependency: the CLR 4 runtime is always used.
+    triggers: [all]
+    run_once: false
+    keys: |
+      REGEDIT4
+
+      [HKEY_LOCAL_MACHINE\Software\Microsoft\.NETFramework]
+      "OnlyUseLatestCLR"=dword:00000001
+
+      [HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\.NETFramework]
+      "OnlyUseLatestCLR"=dword:00000001
+
   - name: WPF software rendering
     description: >
       PhotoLab's WPF UI renders black menus with GPU composition under Wine.
       Forces WPF (Avalon) to software rendering; DeepPRIME/GPU compute is unaffected.
-    triggers: [components]
+    triggers: [all]
     run_once: false
     keys: |
       REGEDIT4
@@ -80,7 +125,7 @@ Registry_Rules:
     description: >
       DXVK cannot drive the DirectComposition path msedgewebview2.exe uses.
       Per-application override keeps DXVK/vkd3d for PhotoLab itself.
-    triggers: [components]
+    triggers: [all]
     run_once: false
     keys: |
       REGEDIT4
