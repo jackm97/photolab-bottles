@@ -1,48 +1,23 @@
-# DxO PhotoLab 9.14 — Bottles config backup
+# DxO PhotoLab 9 — Bottles config backup
 # Import in Bottles: Import → "Import a config backup" → pick this file.
-# Bottles will create the bottle, install runner/DXVK/VKD3D, replay the
-# dependency list IN ORDER, then carry the Registry Rules into the bottle.
+# Bottles creates the bottle, selects the runner/DXVK/VKD3D below, replays the
+# dependency list in order and carries the Registry Rules into the bottle.
 #
-# Before importing, make sure these components are downloaded in Bottles
-# Preferences (otherwise Bottles silently falls back to whatever it has):
-#   Runners  → kron4ek-wine-11.19-staging-amd64   (the version verified working)
-#   DXVK     → dxvk-3.1.1-2-6689ca9
-#   VKD3D    → vkd3d-proton-3.0.1-9-fdbaf51
-#
-# Facts this config is built on (from the installer binaries + Wine/Bottles source):
-#  * Bootstrapper calls ntdll!RtlGetVersion and accepts ONLY
-#      Major==10 && 19045<=Build<=21999   (Win10 22H2+)
-#      Major==10 && Build>=22621           (Win11 22H2+)
-#    Bottles' "win11" preset is 22000 and "win10" is 19043 — both rejected.
-#  * The bootstrapper is 32-bit, so Wine resolves its version from the
-#    Wow6432Node copy of ...\Windows NT\CurrentVersion. Any fix must land in
-#    BOTH views. The rule below does that; winecfg does the same thing.
-#  * Bottles' dotnet48 recipe ends with set_windows:win10 (→19043), so the
-#    rule is set to re-apply on every program start.
-#  * MSI has no LaunchCondition. It skips its WebView2 step if
-#    HKLM\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-...}\pv
-#    exists — which the webview2 dependency's installer creates.
-#  * msiexec is run as:  /i <msi> /qn /log "<Temp>\photolab_install_log.log"
-#    Bootstrapper log:    <Temp>\photolab_installer_bootstrap_log.log
-#    (Temp = drive_c/users/<you>/Temp)
-#
-# KNOWN WALL this config cannot remove: custom action CheckWindowsAppSDKRuntime
-# (seq 6589, condition "NOT REMOVE") activates the WinRT class
-# Windows.Management.Deployment.PackageManager to enumerate MSIX packages.
-# Upstream Wine implements only Windows.ApplicationModel.Package/DesignMode,
-# so activation fails → the action fails → msiexec rolls back. Expect the
-# MSI log to end there. Everything above it should now be green.
+# Pairs with the photolab-wine runner published as a GitHub Release of
+# jackm97/photolab-bottles, and with the catalogs in docs/bottles-setup.md
+# (they provide the runner and the netfx48-winrt dependency). After importing,
+# run DxO's own Setup.exe in the bottle and activate DxO. A newer photolab-wine
+# runner can be selected in the bottle's settings.
 
 Name: DxO PhotoLab 9
 Arch: win64
 Environment: Custom
 
-# Bottles writes 22000 here; the Registry Rule below overrides to 26100.
 Windows: win11
 
-Runner: kron4ek-wine-11.19-staging-amd64
-DXVK: dxvk-3.1.1-2-6689ca9
-VKD3D: vkd3d-proton-3.0.1-9-fdbaf51
+Runner: photolab-wine-d67f859
+DXVK: dxvk-3.1.1
+VKD3D: vkd3d-proton-3.0.1
 NVAPI: ""
 D7VK: ""
 LatencyFleX: ""
@@ -51,19 +26,20 @@ Versioning: false
 Language: sys
 
 Parameters:
-  dxvk: true            # D3D9–11 → Vulkan (PhotoLab UI, OpenCL interop paths)
-  vkd3d: true           # D3D12 → Vulkan (DirectML / ONNX Runtime GPU path)
-  dxvk_nvapi: false     # not needed for compute; keep the surface small
+  dxvk: true
+  vkd3d: true
+  wayland: true
+  renderer: vulkan
+  dxvk_nvapi: false
   d7vk: false
   latencyflex: false
-  sync: wine            # Bottles enables ntsync automatically when the kernel has it
-  renderer: gl          # wined3d backend; only msedgewebview2.exe uses wined3d here
-  discrete_gpu: false   # single-GPU desktop; llvmpipe is filtered via env below
-  use_runtime: false    # host (Flatpak) libs; the Bottles runtime adds nothing here
+  sync: wine
+  discrete_gpu: false
+  use_runtime: false
   use_steam_runtime: false
   winebridge: false
   sandbox: false
-  fixme_logs: false     # flip on when you want WINEDEBUG=fixme output in the log
+  fixme_logs: false
   mouse_warp: true
   decorated: true
   take_focus: false
@@ -72,69 +48,22 @@ Parameters:
 
 Environment_Variables:
   # Hide Mesa's lavapipe ICD from the Vulkan loader so vkd3d-proton / ONNX
-  # Runtime cannot pick the software device instead of the RTX 4090.
-  # (Loader ≥1.3.234; pattern matches the ICD manifest filename.)
+  # Runtime cannot pick the software device instead of the real GPU.
   VK_LOADER_DRIVERS_DISABLE: "lvp_icd.*"
   # Chromium inside WebView2 crashes under Wine without these.
   WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS: "--no-sandbox --disable-gpu --disable-gpu-compositing"
 
-# Replayed in this order on import. Order matters: dotnet48 resets the
-# Windows version; webview2 must be present before you run DxO's Setup.exe.
+# Replayed in this order on import.
 Installed_Dependencies:
-  - dotnet48          # .NET Framework 4.8 — required by PhotoLab AND by the MSI's managed custom actions
-  - vcredist2022      # VC++ 2015–2022 x86+x64
-  - d3dcompiler_47    # HLSL compiler for WPF/D3D
-  - corefonts         # Arial/Times/Verdana etc.
-  - selawik           # open Segoe UI replacement, substituted in both registry views
-  - webview2          # Edge WebView2 Evergreen runtime; makes the MSI skip its own WebView2 step
+  - dotnet48
+  - vcredist2022
+  - d3dcompiler_47
+  - allfonts
+  - netfx48-winrt
 
-DLL_Overrides: {}     # components and dependencies add their own; WebView2's per-app overrides are a Registry Rule below
+DLL_Overrides: {}
 
 Registry_Rules:
-  - name: Windows 11 24H2 in both registry views
-    description: >
-      RtlGetVersion-visible build 26100 for 64-bit AND 32-bit (Wow6432Node)
-      processes. Re-applied on every program start because Bottles' dependency
-      recipes (dotnet48) reset the version to 19043.
-    triggers: [start_program, components]
-    run_once: false
-    keys: |
-      REGEDIT4
-
-      [HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion]
-      "CurrentMajorVersionNumber"=dword:0000000a
-      "CurrentMinorVersionNumber"=dword:00000000
-      "CurrentVersion"="6.3"
-      "CurrentBuild"="26100"
-      "CurrentBuildNumber"="26100"
-      "UBR"=dword:0000122c
-      "DisplayVersion"="24H2"
-      "ReleaseId"="2009"
-      "ProductName"="Windows 11 Pro"
-      "EditionId"="Professional"
-      "InstallationType"="Client"
-      "CSDVersion"=""
-
-      [HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\Windows NT\CurrentVersion]
-      "CurrentMajorVersionNumber"=dword:0000000a
-      "CurrentMinorVersionNumber"=dword:00000000
-      "CurrentVersion"="6.3"
-      "CurrentBuild"="26100"
-      "CurrentBuildNumber"="26100"
-      "UBR"=dword:0000122c
-      "DisplayVersion"="24H2"
-      "ReleaseId"="2009"
-      "ProductName"="Windows 11 Pro"
-      "EditionId"="Professional"
-      "InstallationType"="Client"
-      "CSDVersion"=""
-
-      [HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\ProductOptions]
-      "ProductType"="WinNT"
-
-      [HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Windows]
-      "CSDVersion"=dword:00000000
-
   - name: WPF software rendering
     description: >
       PhotoLab's WPF UI renders black menus with GPU composition under Wine.
@@ -146,19 +75,6 @@ Registry_Rules:
 
       [HKEY_CURRENT_USER\Software\Microsoft\Avalon.Graphics]
       "DisableHWAcceleration"=dword:00000001
-
-  - name: ClearType font smoothing
-    description: Subpixel AA so Selawik/corefonts don't look jagged in WPF.
-    triggers: [components]
-    run_once: false
-    keys: |
-      REGEDIT4
-
-      [HKEY_CURRENT_USER\Control Panel\Desktop]
-      "FontSmoothing"="2"
-      "FontSmoothingType"=dword:00000002
-      "FontSmoothingGamma"=dword:00000578
-      "FontSmoothingOrientation"=dword:00000001
 
   - name: WebView2 uses Wine builtin D3D
     description: >
@@ -176,15 +92,3 @@ Registry_Rules:
       "d3d12"="builtin"
       "d3d12core"="builtin"
       "dxgi"="builtin"
-
-  - name: Advertised VRAM
-    description: >
-      Tells wined3d (and the dxcore shim, if you later add it) the real VRAM.
-      RTX 4090 = 24576 MB. Harmless if unused.
-    triggers: [components]
-    run_once: false
-    keys: |
-      REGEDIT4
-
-      [HKEY_CURRENT_USER\Software\Wine\Direct3D]
-      "VideoMemorySize"="24576"
