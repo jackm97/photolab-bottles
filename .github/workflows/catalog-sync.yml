@@ -1,0 +1,55 @@
+name: catalog-sync
+
+# Mirrors bottlesdevs/components and bottlesdevs/dependencies, adds our runner
+# releases and the netfx48-winrt dependency, and force-pushes the result as a
+# single commit to the orphan branch `catalog`.
+
+on:
+  workflow_dispatch:
+    inputs:
+      components_ref:
+        description: bottlesdevs/components ref
+        default: main
+        required: false
+      dependencies_ref:
+        description: bottlesdevs/dependencies ref
+        default: main
+        required: false
+      runner_tag:
+        description: Release tag that must exist (optional)
+        default: ""
+        required: false
+
+permissions:
+  contents: write
+
+env:
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+concurrency:
+  group: catalog-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out photolab-bottles
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.11.2
+        with:
+          pixi-version: latest
+          run-install: false
+          cache: false
+
+      - name: Sync the catalog
+        env:
+          COMPONENTS_REF: ${{ inputs.components_ref }}
+          DEPENDENCIES_REF: ${{ inputs.dependencies_ref }}
+          RUNNER_TAG: ${{ inputs.runner_tag }}
+        run: pixi exec --spec nushell --spec 7zip --spec cabextract nu scripts/catalog-sync.nu

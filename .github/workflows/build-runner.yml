@@ -1,0 +1,97 @@
+name: build-runner
+
+# Builds the photolab-wine runner from jackm97/wine-cachyos, publishes it as a
+# GitHub Release (photolab-wine-<sha7>) and dispatches catalog-sync.
+
+on:
+  workflow_dispatch:
+    inputs:
+      wine_repo:
+        description: Wine source repository
+        default: jackm97/wine-cachyos
+        required: false
+      wine_ref:
+        description: Wine source branch, tag or commit
+        default: photolab-soda
+        required: false
+
+permissions:
+  contents: write
+  actions: write
+
+env:
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - name: Check out photolab-bottles
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      # Replaces the submodule inside the CI workspace only; nothing is staged.
+      - name: Check out Wine
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.wine_repo }}
+          ref: ${{ inputs.wine_ref }}
+          path: wine
+
+      - name: Resolve the Wine commit and refuse an existing release
+        id: ver
+        run: |
+          sha=$(git -C wine rev-parse HEAD)
+          sha7=${sha:0:7}
+          tag="photolab-wine-${sha7}"
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "::error::release $tag already exists"
+            exit 1
+          fi
+          {
+            echo "sha=$sha"
+            echo "sha7=$sha7"
+            echo "tag=$tag"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.11.2
+        with:
+          pixi-version: latest
+          run-install: false
+          cache: false
+
+      - name: Build the conda package
+        working-directory: wine
+        run: pixi publish --target-dir ../dist --package-format tar-bz2
+
+      - name: Repack, checksum and archive the source
+        env:
+          SHA: ${{ steps.ver.outputs.sha }}
+          WINE_REPO: ${{ inputs.wine_repo }}
+          WINE_REF: ${{ inputs.wine_ref }}
+        run: |
+          pixi exec --spec nushell nu scripts/package-runner.nu \
+            --sha "$SHA" --wine-repo "$WINE_REPO" --wine-ref "$WINE_REF"
+
+      - name: Create the release
+        env:
+          TAG: ${{ steps.ver.outputs.tag }}
+          SHA: ${{ steps.ver.outputs.sha }}
+          WINE_REPO: ${{ inputs.wine_repo }}
+          WINE_REF: ${{ inputs.wine_ref }}
+        run: |
+          notes=$(printf 'wine_repo: %s\nwine_ref: %s\nsha: %s\n' "$WINE_REPO" "$WINE_REF" "$SHA")
+          gh release create "$TAG" \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "${{ github.sha }}" \
+            --title "$TAG" \
+            --notes "$notes" \
+            out/*
+
+      - name: Dispatch catalog-sync
+        env:
+          TAG: ${{ steps.ver.outputs.tag }}
+        run: gh workflow run catalog-sync.yml --repo "$GITHUB_REPOSITORY" -f runner_tag="$TAG"
