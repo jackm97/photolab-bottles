@@ -8,6 +8,18 @@ const installer_url = 'https://download.visualstudio.microsoft.com/download/pr/7
 const installer_sha256 = '95889d6de3f2070c07790ad6cf2000d33d9a1bdfc6a381725ab82ab1c314fd53'
 const winrt_cab = 'x64-Windows10.0-KB4486153-x64.cab'
 
+# Release tags that are runners. The old photolab-wine-* ones stay in the catalog as stable;
+# the Soda-style soda-11.0-35-photolab-* ones are new and unstable, like upstream's soda-11.0-*-experimental.
+const runner_prefixes = ['photolab-wine-', 'soda-11.0-35-photolab-']
+
+def is-runner-tag [tag: string] {
+    $runner_prefixes | any {|p| $tag | str starts-with $p }
+}
+
+def runner-channel [tag: string] {
+    if ($tag | str starts-with 'photolab-wine-') { 'stable' } else { 'unstable' }
+}
+
 # Every *.yml file directly at the subtree root is an index file: index.yml
 # plus the versioned ones (67.5.yml, ...) that Bottles requests first.
 def root-indexes [root: string] {
@@ -101,7 +113,7 @@ def sync-catalog [tmp: string] {
 
     # 2. Our runners.
     let tags = (^gh release list --repo $repo --limit 1000 --json tagName | from json | get tagName
-        | where {|t| $t | str starts-with 'photolab-wine-' })
+        | where {|t| is-runner-tag $t })
     if ($runner_tag | is-not-empty) and ($runner_tag not-in $tags) {
         error make { msg: $"no release with tag ($runner_tag)" }
     }
@@ -119,7 +131,7 @@ def sync-catalog [tmp: string] {
             Name: $tag
             Provider: jackm97
             Maintainer: CI
-            Channel: stable
+            Channel: (runner-channel $tag)
             File: [{
                 file_name: $info.file_name
                 rename: $info.file_name
@@ -133,7 +145,7 @@ def sync-catalog [tmp: string] {
         $runner_entries = ($runner_entries | upsert $tag {
             Category: runners
             'Sub-category': wine
-            Channel: stable
+            Channel: (runner-channel $tag)
             Date: ($info.date | into string)
             Platforms: [linux]
             Architectures: [x86_64]

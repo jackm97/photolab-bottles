@@ -1,7 +1,8 @@
 name: build-runner
 
-# Builds the photolab-wine runner from jackm97/wine-cachyos, publishes it as a
-# GitHub Release (photolab-wine-<sha7>) and dispatches catalog-sync.
+# Builds the Soda-style runner from jackm97/wine-cachyos (photolab-clean), including
+# the Eagle tooling built from the pinned bottles/soda commit (scripts/package-runner.nu),
+# publishes it as a GitHub Release (soda-11.0-35-photolab-<sha7>) and dispatches catalog-sync.
 
 on:
   workflow_dispatch:
@@ -12,7 +13,7 @@ on:
         required: false
       wine_ref:
         description: Wine source branch, tag or commit
-        default: photolab-soda
+        default: photolab-clean
         required: false
 
 permissions:
@@ -40,11 +41,12 @@ jobs:
           ref: ${{ inputs.wine_ref }}
           path: wine
 
-      # The self-hosted runner does not ship these like ubuntu-latest does.
+      # The self-hosted runner does not ship these like ubuntu-latest does. Everything else the
+      # Eagle stage needs (compilers, static libraries, MinGW) comes from pixi exec and pinned downloads.
       - name: Check required tools
         run: |
           missing=""
-          for t in tar xz bzip2 md5sum git gh; do
+          for t in tar xz bzip2 md5sum git gh curl sh; do
             command -v "$t" >/dev/null 2>&1 || missing="$missing $t"
           done
           if [ -n "$missing" ]; then
@@ -57,7 +59,7 @@ jobs:
         run: |
           sha=$(git -C wine rev-parse HEAD)
           sha7=${sha:0:7}
-          tag="photolab-wine-${sha7}"
+          tag="soda-11.0-35-photolab-${sha7}"
           if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
             echo "::error::release $tag already exists"
             exit 1
@@ -106,7 +108,7 @@ jobs:
           WINE_REPO: ${{ inputs.wine_repo }}
           WINE_REF: ${{ inputs.wine_ref }}
         run: |
-          notes=$(printf 'wine_repo: %s\nwine_ref: %s\nsha: %s\n' "$WINE_REPO" "$WINE_REF" "$SHA")
+          notes=$(printf 'wine_repo: %s\nwine_ref: %s\nsha: %s\n' "$WINE_REPO" "$WINE_REF" "$SHA"; cat out/EAGLE-SOURCE)
           gh release create "$TAG" \
             --repo "$GITHUB_REPOSITORY" \
             --target "${{ github.sha }}" \
