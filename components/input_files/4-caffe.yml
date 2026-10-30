@@ -1,0 +1,86 @@
+caffe-10.0:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+  Date: '1786284923'
+caffe-9.7:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+  Date: '1714029044'
+caffe-9.2:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+  Date: '1709156155'
+caffe-8.21:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+  Date: '1701300398'
+caffe-8.18:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+  Date: '1700389939'
+caffe-7.20:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+  Date: '1667428188'
+caffe-7.18:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+caffe-7.15:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+caffe-7.10-1:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+caffe-7.10:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+caffe-7.9:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+caffe-7.8-1:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+caffe-7.8:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+caffe-7.7:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+caffe-7.6:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+caffe-7.5:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+caffe-7.4:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+caffe-7.2:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+caffe-7.0:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+caffe-6.23:
+  Category: runners
+  Sub-category: wine
+  Channel: stable

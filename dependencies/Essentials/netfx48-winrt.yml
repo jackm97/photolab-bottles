@@ -1,0 +1,53 @@
+Name: netfx48-winrt
+Description: .NET Framework 4.8 Windows Runtime interop assemblies (System.Runtime.WindowsRuntime, .UI.Xaml)
+Provider: Microsoft
+License: Microsoft EULA
+License_url: https://dotnet.microsoft.com/en-us/dotnet_library_license.htm
+Dependencies: [dotnet48]
+# The double-underscore placeholders below (checksum and the two msil directories)
+# are filled in by scripts/catalog-sync.nu in the published catalog copy only.
+Steps:
+  - action: archive_extract
+    url: https://download.visualstudio.microsoft.com/download/pr/7afca223-55d2-470a-8edc-6a1739ae3252/abd170b4b0ec15ad0222a809b761a036/ndp48-x86-x64-allos-enu.exe
+    file_name: ndp48-x86-x64-allos-enu.exe
+    rename: ndp48-winrt.7z
+    file_checksum: 4e7a8586d06ce1f8cebac0d4bc379e16
+    dest: temp/ndp48-winrt/
+  - action: cab_extract
+    url: temp/ndp48-winrt/
+    file_name: x64-Windows10.0-KB4486153-x64.cab
+    dest: temp/ndp48-winrt-kb/
+  - action: copy_dll
+    file_name: system.runtime.windowsruntime.dll
+    url: temp/ndp48-winrt-kb/msil_system.runtime.windowsruntime_b77a5c561934e089_4.0.15744.161_none_6013826172a1f4c8
+    dest: windows/Microsoft.NET/Framework/v4.0.30319
+  - action: copy_dll
+    file_name: system.runtime.windowsruntime.dll
+    url: temp/ndp48-winrt-kb/msil_system.runtime.windowsruntime_b77a5c561934e089_4.0.15744.161_none_6013826172a1f4c8
+    dest: windows/Microsoft.NET/Framework64/v4.0.30319
+  - action: copy_dll
+    file_name: system.runtime.windowsruntime.dll
+    url: temp/ndp48-winrt-kb/msil_system.runtime.windowsruntime_b77a5c561934e089_4.0.15744.161_none_6013826172a1f4c8
+    dest: windows/Microsoft.NET/assembly/GAC_MSIL/System.Runtime.WindowsRuntime/v4.0_4.0.0.0__b77a5c561934e089
+  - action: copy_dll
+    file_name: system.runtime.windowsruntime.ui.xaml.dll
+    url: temp/ndp48-winrt-kb/msil_system.runtime.windowsruntime.ui.xaml_b77a5c561934e089_4.0.15744.161_none_378b5424dcde5254
+    dest: windows/Microsoft.NET/Framework/v4.0.30319
+  - action: copy_dll
+    file_name: system.runtime.windowsruntime.ui.xaml.dll
+    url: temp/ndp48-winrt-kb/msil_system.runtime.windowsruntime.ui.xaml_b77a5c561934e089_4.0.15744.161_none_378b5424dcde5254
+    dest: windows/Microsoft.NET/Framework64/v4.0.30319
+  - action: copy_dll
+    file_name: system.runtime.windowsruntime.ui.xaml.dll
+    url: temp/ndp48-winrt-kb/msil_system.runtime.windowsruntime.ui.xaml_b77a5c561934e089_4.0.15744.161_none_378b5424dcde5254
+    dest: windows/Microsoft.NET/assembly/GAC_MSIL/System.Runtime.WindowsRuntime.UI.Xaml/v4.0_4.0.0.0__b77a5c561934e089
+  - action: set_register_key
+    key: HKEY_LOCAL_MACHINE\Software\Microsoft\.NETFramework
+    value: OnlyUseLatestCLR
+    data: 1
+    type: REG_DWORD
+  - action: set_register_key
+    key: HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\.NETFramework
+    value: OnlyUseLatestCLR
+    data: 1
+    type: REG_DWORD

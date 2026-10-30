@@ -1,0 +1,13 @@
+Name: photolab-wine-2941df8
+Provider: jackm97
+Maintainer: CI
+Channel: stable
+File:
+- file_name: photolab-wine-2941df8-x86_64.tar.xz
+  rename: photolab-wine-2941df8-x86_64.tar.xz
+  url: >-
+    https://github.com/jackm97/photolab-bottles/releases/download/photolab-wine-2941df8/photolab-wine-2941df8-x86_64.tar.xz
+  file_checksum: 2dec64650600aa20104ee4bafdfd725d
+  file_size: 211476768
+  architecture: x86_64
+  platform: linux

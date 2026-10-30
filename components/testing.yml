@@ -1,0 +1,50 @@
+caffe-6.23:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+vkd3d-v2.5:
+  Category: vkd3d
+  Channel: stable
+dxvk-1.9:
+  Category: dxvk
+  Channel: stable
+lutris-ge-7.14-1-GE-LoL:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+soda-11.0-35-photolab-00cbcb1:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+  Date: "1793350527"
+  Platforms:
+  - linux
+  Architectures:
+  - x86_64
+soda-11.0-35-photolab-b649ee9:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+  Date: "1793338437"
+  Platforms:
+  - linux
+  Architectures:
+  - x86_64
+photolab-wine-2941df8:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+  Date: "1793253171"
+  Platforms:
+  - linux
+  Architectures:
+  - x86_64
+photolab-wine-d67f859:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+  Date: "1793246021"
+  Platforms:
+  - linux
+  Architectures:
+  - x86_64

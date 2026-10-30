@@ -1,0 +1,8 @@
+Name: chardonnay-6.11
+Provider: bottles
+Channel: stable
+File:
+- file_name: chardonnay-6.11-x86_64.tar.gz
+  url: https://github.com/bottlesdevs/wine/releases/download/6.11/chardonnay-6.11-x86_64.tar.gz
+  file_checksum: 3a94cf39266b48a8cb9f6eb7f8f8d95c
+  rename: chardonnay-6.11-x86_64.tar.gz

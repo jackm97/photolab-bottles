@@ -1,0 +1,13 @@
+Name: photolab-wine-d67f859
+Provider: jackm97
+Maintainer: CI
+Channel: stable
+File:
+- file_name: photolab-wine-d67f859-x86_64.tar.xz
+  rename: photolab-wine-d67f859-x86_64.tar.xz
+  url: >-
+    https://github.com/jackm97/photolab-bottles/releases/download/photolab-wine-d67f859/photolab-wine-d67f859-x86_64.tar.xz
+  file_checksum: 54d0ff34aa9a5ea292c3e266774aa561
+  file_size: 245769068
+  architecture: x86_64
+  platform: linux

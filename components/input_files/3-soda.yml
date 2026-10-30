@@ -1,0 +1,375 @@
+soda-11.0-36-experimental:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+  Date: '1793215063'
+  Platforms:
+  - linux
+  Architectures:
+  - x86_64
+  - aarch64
+soda-11.0-35-experimental:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+  Date: '1793024228'
+  Platforms:
+  - linux
+  Architectures:
+  - x86_64
+  - aarch64
+soda-11.0-34-experimental:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+  Date: '1792946590'
+  Platforms:
+  - linux
+  Architectures:
+  - x86_64
+  - aarch64
+soda-11.0-33-experimental:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+  Date: '1792818856'
+  Platforms:
+  - linux
+  Architectures:
+  - x86_64
+  - aarch64
+soda-11.0-32-experimental:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+  Date: '1792264689'
+  Platforms:
+  - linux
+  Architectures:
+  - x86_64
+  - aarch64
+soda-11.0-31-experimental:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+  Date: '1792240332'
+  Platforms:
+  - linux
+  Architectures:
+  - x86_64
+  - aarch64
+soda-11.0-30-experimental:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+  Date: '1791822743'
+  Platforms:
+  - linux
+  Architectures:
+  - x86_64
+  - aarch64
+soda-11.0-29-experimental:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+  Date: '1791648237'
+  Platforms:
+  - linux
+  Architectures:
+  - x86_64
+  - aarch64
+soda-11.0-28-experimental:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+  Date: '1791390532'
+  Platforms:
+  - linux
+  Architectures:
+  - x86_64
+  - aarch64
+soda-11.0-27-experimental:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+  Date: '1791291367'
+  Platforms:
+    - linux
+  Architectures:
+    - x86_64
+    - aarch64
+soda-11.0-26-experimental:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+  Date: '1791223346'
+  Platforms:
+    - linux
+  Architectures:
+    - x86_64
+    - aarch64
+soda-11.0-25-experimental:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+  Date: '1791151250'
+  Platforms:
+    - linux
+  Architectures:
+    - x86_64
+    - aarch64
+soda-11.0-24-experimental:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+  Date: '1790925629'
+  Platforms:
+    - linux
+  Architectures:
+    - x86_64
+    - aarch64
+soda-11.0-23-experimental:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+  Date: '1790841185'
+  Platforms:
+    - linux
+  Architectures:
+    - x86_64
+    - aarch64
+soda-11.0-22-experimental:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+  Date: '1790668025'
+  Platforms:
+    - linux
+  Architectures:
+    - x86_64
+    - aarch64
+soda-11.0-21-experimental:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+  Date: '1790660774'
+  Platforms:
+    - linux
+  Architectures:
+    - x86_64
+    - aarch64
+soda-11.0-20-experimental:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+  Date: '1790652809'
+  Platforms:
+    - linux
+  Architectures:
+    - x86_64
+    - aarch64
+soda-11.0-19-experimental:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+  Date: '1790643467'
+  Platforms:
+    - linux
+  Architectures:
+    - x86_64
+    - aarch64
+soda-11.0-18-experimental:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+  Date: '1790619226'
+  Platforms:
+    - linux
+  Architectures:
+    - x86_64
+    - aarch64
+soda-11.0-17-experimental:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+  Date: '1790581718'
+  Platforms:
+    - linux
+  Architectures:
+    - x86_64
+    - aarch64
+soda-11.0-16-experimental:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+  Date: '1790552887'
+  Platforms:
+    - linux
+  Architectures:
+    - x86_64
+    - aarch64
+soda-11.0-14-experimental:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+  Date: '1790499576'
+  Platforms:
+    - linux
+  Architectures:
+    - x86_64
+    - aarch64
+soda-11.0-13-experimental:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+  Date: '1790469217'
+  Platforms:
+    - linux
+  Architectures:
+    - x86_64
+    - aarch64
+soda-11.0-12-experimental:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+  Date: '1790280160'
+  Platforms:
+    - linux
+  Architectures:
+    - x86_64
+    - aarch64
+soda-11.0-11-experimental:
+  Category: runners
+  Sub-category: wine
+  Channel: unstable
+  Date: '1789914862'
+  Platforms:
+    - linux
+  Architectures:
+    - x86_64
+    - aarch64
+soda-11.0-10:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+  Date: '1788795452'
+  Platforms:
+    - linux
+  Architectures:
+    - x86_64
+    - aarch64
+soda-11.0-9:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+  Date: '1788715977'
+  Platforms:
+    - linux
+  Architectures:
+    - x86_64
+    - aarch64
+soda-11.0-8:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+  Date: '1788653898'
+  Platforms:
+    - linux
+  Architectures:
+    - x86_64
+    - aarch64
+soda-11.0-7:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+  Date: '1788172914'
+  Platforms:
+    - linux
+  Architectures:
+    - x86_64
+    - aarch64
+soda-11.0-6:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+  Date: '1787658195'
+soda-mcsoda-11.0-4:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+  Date: '1786812163'
+soda-mcsoda-11.0-3:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+  Date: '1786758714'
+soda-11.0-5:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+  Date: '1786362735'
+soda-11.0-4:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+  Date: '1785787216'
+soda-11.0-3:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+  Date: '1785525572'
+soda-11.0-2:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+  Date: '1785474586'
+soda-9.0-1:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+  Date: '1714390617'
+soda-8.0-2:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+  Date: '1701298137'
+soda-experimental_8.0:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+  Date: '1699132943'
+soda-7.0-9:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+  Date: '1675615281'
+soda-7.0-8:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+  Date: '1670774392'
+soda-7.0-7:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+  Date: '1667427951'
+soda-7.0-4:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+soda-7.0-3:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+soda-7.0-2:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+soda-7.0-1:
+  Category: runners
+  Sub-category: wine
+  Channel: stable
+soda-7.0:
+  Category: runners
+  Sub-category: wine
+  Channel: stable

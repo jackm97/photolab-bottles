@@ -1,0 +1,38 @@
+dotnet461:
+  Description: Microsoft .NET Framework 4.6.1
+  Category: Essentials
+mediafoundation:
+  Description: Microsoft Media Foundation
+  Category: Essentials
+d3dx9:
+  Description: Microsoft d3dx9 DLLs from DirectX 9 redistributable
+  Category: Essentials
+d3dcompiler_43:
+  Description: Microsoft d3dcompiler_43.dll
+  Category: Essentials
+d3dcompiler_46:
+  Description: Microsoft d3dcompiler_46.dll
+  Category: Essentials
+d3dcompiler_47:
+  Description: Microsoft d3dcompiler_47.dll
+  Category: Essentials
+art2kmin:
+  Description: MS Access 2000 runtime
+  Category: Essentials
+art2k7min:
+  Description: MS Access 2007 runtime
+  Category: Essentials
+gdiplus:
+  Description: Microsoft GDI+ (Graphics Device Interface)
+  Category: Essentials
+allfonts:
+  Description: All Microsoft and Adobe essential fonts
+  Category: Fonts
+cjkfonts:
+  Description: All Chinese/Japanese/Korean fonts
+  Category: Fonts
+netfx48-winrt:
+  Description: >-
+    .NET Framework 4.8 Windows Runtime interop assemblies
+    (System.Runtime.WindowsRuntime, .UI.Xaml)
+  Category: Essentials

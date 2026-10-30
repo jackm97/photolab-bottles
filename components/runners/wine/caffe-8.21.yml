@@ -1,0 +1,10 @@
+Name: caffe-8.21
+Provider: bottlesdevs
+Maintainer: CI
+Channel: stable
+File:
+    - file_name: caffe-8.21-x86_64.tar.xz
+      url: https://github.com/bottlesdevs/wine/releases/download/caffe-8.21/caffe-8.21-x86_64.tar.xz
+      file_checksum: 32433c51ed3acf9ff958401a29da16b4
+      file_size: 64895896
+      rename: caffe-8.21-x86_64.tar.xz

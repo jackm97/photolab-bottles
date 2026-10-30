@@ -1,0 +1,13 @@
+Name: soda-11.0-35-photolab-00cbcb1
+Provider: jackm97
+Maintainer: CI
+Channel: unstable
+File:
+- file_name: soda-11.0-35-photolab-00cbcb1-x86_64.tar.xz
+  rename: soda-11.0-35-photolab-00cbcb1-x86_64.tar.xz
+  url: >-
+    https://github.com/jackm97/photolab-bottles/releases/download/soda-11.0-35-photolab-00cbcb1/soda-11.0-35-photolab-00cbcb1-x86_64.tar.xz
+  file_checksum: 16cc525a49a92ca39f8971ab0a36ce52
+  file_size: 235869104
+  architecture: x86_64
+  platform: linux
