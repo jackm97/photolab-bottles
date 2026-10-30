@@ -1,30 +1,49 @@
 # DxO PhotoLab 9 — Bottles config backup
-# Import in Bottles: Import → "Import a config backup" → pick this file.
-# Bottles creates the bottle, selects the runner/DXVK/VKD3D below, replays the
-# dependency list in order and carries the Registry Rules into the bottle.
 #
-# Pairs with the photolab-wine runner published as a GitHub Release of
-# jackm97/photolab-bottles, and with the catalogs in docs/bottles-setup.md
-# (they provide the runner and the netfx48-winrt dependency). After importing,
-# run DxO's own Setup.exe in the bottle and activate DxO. A newer photolab-wine
-# runner can be selected in the bottle's settings.
+# Import
+#   Import a config backup, then run DxO's own Setup.exe in the bottle and
+#   activate DxO.
+#   Runner: soda-11.0-35-photolab-b649ee9 (Bottles unstable channel). The soda-
+#   prefix enables Bottles' Soda helpers and Eagle. The catalogs are in
+#   docs/bottles-setup.md.
 #
-# Windows version: Bottles' win11 preset writes build 22000, which DxO's
-# installer rejects, so the bottle uses win10 and the "Windows 11 build 26100"
-# Registry Rule sets the build values (the same ones scripts/prefix-winver.nu
-# sets) on every trigger and removes Wine's own version override.
+# Kept
+#   DXVK dxvk-3.1.1 + dxvk:true: D3D11 legacy viewer, DXGI enumeration, WPF
+#     d3d9; also provides DXVKDUMMYWNDCLASS, which Soda's dcomp bridge relies on.
+#   VKD3D vkd3d-proton-3.0.1 + vkd3d:true: DxO's engine statically imports
+#     d3d12!D3D12GetInterface; DirectML runs on it.
+#   Windows win10 + rule "Windows 11 build 26100": DxO's bootstrapper rejects
+#     builds below 19045 and 22000-22620; Bottles' win11 preset writes 22000;
+#     dotnet48 leaves a win10 build behind; rules fire after dependencies.
+#   ".NET OnlyUseLatestCLR": observed WineHQ 41727 popups.
+#   Dependencies in order: dotnet48 (.NET 4.8 WPF app), vcredist2022 (DxO
+#     native DLLs), netfx48-winrt (installer aborts without it).
+#   wayland:true is the target; set it to false for X11.
+#   discrete_gpu:true: otherwise Bottles pins VK_ICD_FILENAMES to the iGPU on
+#     hybrid machines.
 #
-# Runner: photolab-wine-2941df8 is built for x86-64-v3 and ships Windows.winmd,
-# so a new bottle's wineboot no longer spins looking for it.
+# Dropped
+#   WPF software rendering rule: WPF ignored it (d3d9 still loaded), and DxO
+#     enables hardware WPF by design (App.xaml.cs EnableWpfGpuAcceleration true).
+#   WebView2 builtin D3D rule: builtin dxgi's CreateSwapChainForComposition is
+#     an E_NOTIMPL stub, and the rule defeats Soda's dcomp bridge, which needs
+#     DXVK in msedgewebview2.
+#   WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS: the flags don't avoid
+#     DirectComposition.
+#   VK_LOADER_DRIVERS_DISABLE: redundant, because Bottles sets
+#     VK_ICD_FILENAMES.
+#   renderer:vulkan: only affects wined3d; the Bottles default applies.
+#   pulseaudio_latency: Bottles default applies.
+#   d3dcompiler_47: no DxO import found; DXVK and vkd3d compile their own
+#     shaders.
+#   arial32/times32/courie32: not shown to be needed by DxO.
 #
-# Base: this starts from Bottles' Application environment (dxvk and vkd3d on,
-# pulseaudio_latency off, arial32/times32/courie32 fonts); every other
-# Parameters key is left out so Bottles' defaults apply.
-# Added: wayland and the vulkan renderer; dotnet48, vcredist2022,
-# d3dcompiler_47 and netfx48-winrt, which DxO's installer and app need.
-# Dropped from the Application environment: mono (dotnet48 uninstalls Wine Mono
-# anyway) and gecko (unused; DxO's Hub is WebView2). Not included: allfonts,
-# because its webdin32 step fails in stock Bottles too.
+# Experiments
+#   If the DxO Hub (WebView2) is blank under Wayland, first try
+#   Environment_Variables DXVK_CONFIG: "dxgi.enableDummyCompositionSwapchain =
+#   True". Soda's dcomp patch matches DXVK's dummy composition window, and that
+#   option defaults to False. It is not set here. NVAPI and sync choices are
+#   not set either.
 
 Name: DxO PhotoLab 9
 Arch: win64
@@ -32,7 +51,7 @@ Environment: Custom
 
 Windows: win10
 
-Runner: photolab-wine-2941df8
+Runner: soda-11.0-35-photolab-b649ee9
 DXVK: dxvk-3.1.1
 VKD3D: vkd3d-proton-3.0.1
 
@@ -42,25 +61,15 @@ Language: sys
 Parameters:
   dxvk: true
   vkd3d: true
-  pulseaudio_latency: false
   wayland: true
-  renderer: vulkan
+  discrete_gpu: true
 
-Environment_Variables:
-  # Hide Mesa's lavapipe ICD from the Vulkan loader so vkd3d-proton / ONNX
-  # Runtime cannot pick the software device instead of the real GPU.
-  VK_LOADER_DRIVERS_DISABLE: "lvp_icd.*"
-  # Chromium inside WebView2 crashes under Wine without these.
-  WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS: "--no-sandbox --disable-gpu --disable-gpu-compositing"
+Environment_Variables: {}
 
 # Replayed in this order on import.
 Installed_Dependencies:
-  - arial32
-  - times32
-  - courie32
   - dotnet48
   - vcredist2022
-  - d3dcompiler_47
   - netfx48-winrt
 
 DLL_Overrides: {}
@@ -105,32 +114,3 @@ Registry_Rules:
 
       [HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\.NETFramework]
       "OnlyUseLatestCLR"=dword:00000001
-
-  - name: WPF software rendering
-    description: >
-      PhotoLab's WPF UI renders black menus with GPU composition under Wine.
-      Forces WPF (Avalon) to software rendering; DeepPRIME/GPU compute is unaffected.
-    triggers: [all]
-    run_once: false
-    keys: |
-      REGEDIT4
-
-      [HKEY_CURRENT_USER\Software\Microsoft\Avalon.Graphics]
-      "DisableHWAcceleration"=dword:00000001
-
-  - name: WebView2 uses Wine builtin D3D
-    description: >
-      DXVK cannot drive the DirectComposition path msedgewebview2.exe uses.
-      Per-application override keeps DXVK/vkd3d for PhotoLab itself.
-    triggers: [all]
-    run_once: false
-    keys: |
-      REGEDIT4
-
-      [HKEY_CURRENT_USER\Software\Wine\AppDefaults\msedgewebview2.exe\DllOverrides]
-      "d3d9"="builtin"
-      "d3d10core"="builtin"
-      "d3d11"="builtin"
-      "d3d12"="builtin"
-      "d3d12core"="builtin"
-      "dxgi"="builtin"
