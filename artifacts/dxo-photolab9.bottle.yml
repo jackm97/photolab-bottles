@@ -3,11 +3,14 @@
 # Import
 #   Import a config backup, then run DxO's own Setup.exe in the bottle and
 #   activate DxO.
-#   Runner: soda-11.0-35-photolab-b649ee9 (Bottles unstable channel). The soda-
+#   Runner: soda-11.0-35-photolab-00cbcb1 (Bottles unstable channel). The soda-
 #   prefix enables Bottles' Soda helpers and Eagle. The catalogs are in
 #   docs/bottles-setup.md.
 #
 # Kept
+#   Runner: wintypes!RoResolveNamespace resolves every Windows.* namespace
+#     from the combined Windows.winmd; before, the installer's WinRT calls
+#     failed with namespace-not-found.
 #   DXVK dxvk-3.1.1 + dxvk:true: D3D11 legacy viewer, DXGI enumeration, WPF
 #     d3d9; also provides DXVKDUMMYWNDCLASS, which Soda's dcomp bridge relies on.
 #   VKD3D vkd3d-proton-3.0.1 + vkd3d:true: DxO's engine statically imports
@@ -51,7 +54,7 @@ Environment: Custom
 
 Windows: win10
 
-Runner: soda-11.0-35-photolab-b649ee9
+Runner: soda-11.0-35-photolab-00cbcb1
 DXVK: dxvk-3.1.1
 VKD3D: vkd3d-proton-3.0.1
 

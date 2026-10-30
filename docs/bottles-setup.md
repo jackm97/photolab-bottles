@@ -5,11 +5,13 @@
    - Dependencies: `https://raw.githubusercontent.com/jackm97/photolab-bottles/catalog/dependencies`
    The Dependencies catalog is required for `netfx48-winrt`.
 2. Preferences → Runners: enable showing unstable/pre-release components, since the runner is in
-   the unstable channel, and install `soda-11.0-35-photolab-b649ee9`.
+   the unstable channel, and install `soda-11.0-35-photolab-00cbcb1`.
 3. Open [dxo-photolab9.bottle.yml](https://github.com/jackm97/photolab-bottles/blob/main/artifacts/dxo-photolab9.bottle.yml)
-   on GitHub, use the page's "Download raw file" button, save the file, and then import it in
-   Bottles. The bottle already names the soda runner. X11 is a toggle (`wayland: false`), and the
-   bottle file's header has the Hub hint.
+   on GitHub, use the page's "Download raw file" button, save the file, and then use Bottles'
+   Import → "from config" and select the downloaded `dxo-photolab9.bottle.yml`. This is the route
+   that worked. Creating a Custom bottle, picking the runner and then importing the config failed
+   during dotnet40 with exit 1603 (Bottles shows 67, the low byte) with this runner. X11 is a toggle
+   (`wayland: false`), and the bottle file's header has the Hub hint.
 4. Run DxO's own `Setup.exe` in the bottle and activate DxO.
 5. Updating: run `build-runner` (Actions tab), which runs the catalog sync. New runner builds
    appear in the catalog after the catalog sync; change the bottle's runner in its settings. Older
